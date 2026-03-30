@@ -3,8 +3,10 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
+type HeroCard = { title: string; href: string; icon: string; external?: boolean };
+
 export default function Home() {
-  const heroCards = [
+  const heroCards: HeroCard[] = [
     { title: "Get Out of Debt", href: "/debt/debt-101", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-get-out-debt-2x.png" },
     { title: "Buy/Sell Real Estate", href: "/real-estate/residential-real-estate", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-real-estate-2x.png" },
     { title: "Create a Budget", href: "/money/everydollar", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-create-budget-2x.png" },
@@ -55,7 +57,7 @@ export default function Home() {
                 <img src={card.icon} alt={card.title} className="w-20 h-20 object-contain mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <span className="font-bold text-primary text-lg">{card.title}</span>
               </>);
-              return (card as any).external ? (
+              return card.external ? (
                 <a key={idx} href={card.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
               ) : (
                 <Link key={idx} to={card.href} className={cls}>{inner}</Link>
