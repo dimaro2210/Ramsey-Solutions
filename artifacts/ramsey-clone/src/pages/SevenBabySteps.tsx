@@ -17,9 +17,9 @@ export default function SevenBabySteps() {
           <p className="text-xl md:text-2xl font-medium mb-10 text-blue-100">
             You can take control of your money! Dave Ramsey’s 7 Baby Steps will show you how to save for emergencies, pay off all your debt for good, and build wealth. It’s not a fairy tale. It works every single time!
           </p>
-          <button className="bg-accent text-primary font-bold text-xl px-10 py-5 rounded-full hover:bg-yellow-300 transition-colors shadow-xl">
+          <a href="https://www.ramseysolutions.com/dave-ramsey-7-baby-steps" target="_blank" rel="noopener noreferrer" className="bg-accent text-primary font-bold text-xl px-10 py-5 rounded-full hover:bg-yellow-300 transition-colors shadow-xl inline-block">
             Find Out Which Step You're On
-          </button>
+          </a>
         </div>
       </section>
 

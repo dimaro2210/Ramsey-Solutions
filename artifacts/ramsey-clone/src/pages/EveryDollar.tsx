@@ -31,9 +31,9 @@ export default function EveryDollar() {
               ))}
             </ul>
 
-            <button className="bg-[#8ec63f] text-white font-bold text-xl px-10 py-5 rounded-full hover:bg-[#7ab033] hover:shadow-xl transition-all inline-block hover:-translate-y-1">
+            <a href="https://www.everydollar.com" target="_blank" rel="noopener noreferrer" className="bg-[#8ec63f] text-white font-bold text-xl px-10 py-5 rounded-full hover:bg-[#7ab033] hover:shadow-xl transition-all inline-block hover:-translate-y-1">
               Start for Free
-            </button>
+            </a>
             <p className="text-sm text-muted-foreground mt-4 italic">
               *Based on average new users. Your results may vary.
             </p>
@@ -99,9 +99,9 @@ export default function EveryDollar() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold text-primary mb-6">Start Budgeting for Free</h2>
           <p className="text-xl text-muted-foreground mb-10">Join over 10 million people who have used EveryDollar to take control of their money.</p>
-          <button className="bg-[#8ec63f] text-white font-bold text-xl px-12 py-5 rounded-full hover:bg-[#7ab033] hover:shadow-xl transition-all inline-block hover:-translate-y-1">
+          <a href="https://www.everydollar.com" target="_blank" rel="noopener noreferrer" className="bg-[#8ec63f] text-white font-bold text-xl px-12 py-5 rounded-full hover:bg-[#7ab033] hover:shadow-xl transition-all inline-block hover:-translate-y-1">
             Get Started Free
-          </button>
+          </a>
         </div>
       </section>
     </div>

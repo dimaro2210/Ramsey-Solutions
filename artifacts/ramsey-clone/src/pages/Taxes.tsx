@@ -59,7 +59,7 @@ export default function Taxes() {
               { icon: <Users className="w-10 h-10" />, title: "Find a Tax Pro", desc: "Need help? Connect with a RamseyTrusted tax advisor who treats your money like it matters.", link: "/trusted" },
               { icon: <ShieldCheck className="w-10 h-10" />, title: "Tax Resources", desc: "Learn everything from how to file for free to understanding deductions, credits, and withholdings.", link: "/taxes" },
             ].map((card, i) => (
-              <Link key={i} href={card.link} className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:border-secondary/50 transition-all group flex flex-col">
+              <Link key={i} to={card.link} className="bg-white p-8 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:border-secondary/50 transition-all group flex flex-col">
                 <div className="text-secondary mb-4 group-hover:scale-110 transition-transform">{card.icon}</div>
                 <h3 className="text-xl font-bold text-primary mb-3">{card.title}</h3>
                 <p className="text-muted-foreground flex-grow">{card.desc}</p>

@@ -21,7 +21,7 @@ export default function Trusted() {
 
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
             {categories.map((c, i) => (
-              <Link key={i} href={c.link} className="bg-white rounded-2xl p-8 border-2 border-gray-100 shadow-md hover:border-secondary hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col items-center justify-center h-56">
+              <Link key={i} to={c.link} className="bg-white rounded-2xl p-8 border-2 border-gray-100 shadow-md hover:border-secondary hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col items-center justify-center h-56">
                 <div className="text-secondary mb-4 group-hover:scale-110 transition-transform">
                   {c.icon}
                 </div>

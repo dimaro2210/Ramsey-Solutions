@@ -45,7 +45,7 @@ export default function Shows() {
           <h2 className="text-2xl font-bold mb-8 text-gray-400 uppercase tracking-widest text-center">More Shows From Ramsey Network</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pb-20">
             {shows.map((show, i) => (
-              <Link key={i} href={show.href} className="bg-gray-900 rounded-2xl p-6 text-center border border-gray-800 hover:border-gray-600 hover:bg-gray-800 transition-all cursor-pointer">
+              <Link key={i} to={show.href} className="bg-gray-900 rounded-2xl p-6 text-center border border-gray-800 hover:border-gray-600 hover:bg-gray-800 transition-all cursor-pointer">
                 <div className="w-full aspect-square bg-gray-800 rounded-xl mb-4 flex items-center justify-center overflow-hidden p-6">
                   <img src={show.img} alt={show.name} className="w-3/4 object-contain opacity-60 group-hover:opacity-100" />
                 </div>

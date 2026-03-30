@@ -49,7 +49,7 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {heroCards.map((card, idx) => (
-              <Link key={idx} href={card.href} className="bg-white rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer border border-white/20">
+              <Link key={idx} to={card.href} className="bg-white rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer border border-white/20">
                 <img src={card.icon} alt={card.title} className="w-20 h-20 object-contain mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <span className="font-bold text-primary text-lg">{card.title}</span>
               </Link>
@@ -133,7 +133,7 @@ export default function Home() {
           <div className="flex overflow-x-auto pb-8 -mx-4 px-4 sm:mx-0 sm:px-0 gap-6 hide-scrollbar snap-x">
             {babySteps.map((step) => (
               <Link 
-                href="/dave-ramsey-7-baby-steps"
+                to="/dave-ramsey-7-baby-steps"
                 key={step.num} 
                 className="flex-none w-[300px] snap-center bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-secondary/50 transition-all group"
               >
@@ -193,7 +193,7 @@ export default function Home() {
               { title: "EveryDollar", desc: "Get the budgeting app built on Dave Ramsey’s plan.", link: "/money/everydollar", img: "https://cdn.ramseysolutions.net/media/homepage/2025/04-assets/e$.png" },
               { title: "Coverage Checkup", desc: "Get an insurance action plan built to cover your needs.", link: "/insurance", img: "https://cdn.ramseysolutions.net/media/homepage/2025/04-assets/cc.png" },
             ].map((item, i) => (
-              <Link key={i} href={item.link} className="flex flex-col bg-gray-50 rounded-2xl overflow-hidden hover:shadow-xl transition-shadow border border-border group">
+              <Link key={i} to={item.link} className="flex flex-col bg-gray-50 rounded-2xl overflow-hidden hover:shadow-xl transition-shadow border border-border group">
                 <div className="h-48 overflow-hidden bg-gray-200">
                   <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>

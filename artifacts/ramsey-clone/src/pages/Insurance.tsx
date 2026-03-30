@@ -49,9 +49,9 @@ export default function Insurance() {
                 </li>
               ))}
             </ul>
-            <button className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
+            <a href="https://www.ramseysolutions.com/insurance" target="_blank" rel="noopener noreferrer" className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg inline-block">
               Start Your Free Checkup
-            </button>
+            </a>
           </div>
           <div className="flex justify-center">
             <img src="https://cdn.ramseysolutions.net/media/homepage/2025/04-assets/cc.png" alt="Coverage Checkup" className="max-w-md w-full rounded-2xl shadow-xl" />

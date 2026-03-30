@@ -79,9 +79,9 @@ export default function SmartVestor() {
               <li className="flex items-center"><span className="w-2 h-2 bg-accent rounded-full mr-3"></span>Space for notes and contact info</li>
               <li className="flex items-center"><span className="w-2 h-2 bg-accent rounded-full mr-3"></span>A place to rank each pro</li>
             </ul>
-            <button className="bg-white text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-gray-100 transition-colors shadow-lg">
+            <a href="https://www.ramseysolutions.com/retirement/smartvestor" target="_blank" rel="noopener noreferrer" className="bg-white text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-gray-100 transition-colors shadow-lg inline-block">
               Download Your Free Guide
-            </button>
+            </a>
           </div>
           <div className="flex justify-center">
             <img src="https://cdn.ramseysolutions.net/cms/sites/daveramsey-com/smartvestor/home/interview-guide.webp" alt="Interview Guide" className="max-w-md w-full drop-shadow-2xl rounded-lg" />
