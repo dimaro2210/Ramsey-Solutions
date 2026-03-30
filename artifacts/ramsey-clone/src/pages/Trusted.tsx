@@ -31,9 +31,9 @@ export default function Trusted() {
           </div>
 
           <div className="mt-20">
-            <a href="#" className="text-secondary font-bold text-lg hover:underline inline-block border-2 border-secondary px-8 py-3 rounded-full hover:bg-secondary hover:text-white transition-colors">
+            <Link href="/trusted" className="text-secondary font-bold text-lg hover:underline inline-block border-2 border-secondary px-8 py-3 rounded-full hover:bg-secondary hover:text-white transition-colors">
               Become a RamseyTrusted Pro
-            </a>
+            </Link>
           </div>
         </div>
       </section>

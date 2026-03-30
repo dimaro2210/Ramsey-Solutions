@@ -25,12 +25,12 @@ export default function Insurance() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {insurances.map((item, idx) => (
-              <a key={idx} href="#" className="bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:border-secondary transition-all group flex flex-col items-center justify-center text-center h-48">
+              <Link key={idx} href="/insurance" className="bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:border-secondary transition-all group flex flex-col items-center justify-center text-center h-48">
                 <div className="text-secondary mb-4 group-hover:scale-110 transition-transform bg-blue-50 p-4 rounded-full">
                   {item.icon}
                 </div>
                 <span className="font-bold text-primary">{item.title}</span>
-              </a>
+              </Link>
             ))}
           </div>
         </div>

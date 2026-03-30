@@ -11,7 +11,7 @@ export default function Home() {
     { title: "Start Investing", href: "/retirement/smartvestor", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-investing-2x.png" },
     { title: "Plan for Retirement", href: "/retirement/smartvestor", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-retirement-2x.png" },
     { title: "Find Your Insurance", href: "/insurance", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-insurance-2x.png" },
-    { title: "Shop the Store", href: "/#", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-store-2x.png" }
+    { title: "Shop the Store", href: "/dave-ramsey-7-baby-steps", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-store-2x.png" }
   ];
 
   const babySteps = [
@@ -76,11 +76,8 @@ export default function Home() {
             </button>
           </div>
           <div className="relative">
-            {/* Ask Ramsey Team Image */}
-            <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl relative bg-blue-900 border-4 border-white/10 flex items-center justify-center">
-              {/* Fallback stock image mimicking the group shot since the CDN URL wasn't perfectly clear for the image itself, using an Unsplash office group photo placeholder */}
-              {/* office team collaboration working together */}
-              <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Ramsey Personalities" className="w-full h-full object-cover opacity-80 mix-blend-overlay" />
+            <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl relative bg-gradient-to-br from-blue-900 to-primary border-4 border-white/10 flex items-center justify-center">
+              <img src="https://cdn.ramseysolutions.net/media/homepage/2025/04-assets/trs.png" alt="The Ramsey Show" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
               <h3 className="absolute bottom-6 left-6 text-2xl font-bold italic drop-shadow-md">The Ramsey Personalities</h3>
             </div>

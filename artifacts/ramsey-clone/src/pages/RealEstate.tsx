@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle2 } from "lucide-react";
 
@@ -13,7 +14,6 @@ export default function RealEstate() {
 
   return (
     <div className="w-full">
-      {/* Hero Form Section */}
       <section className="bg-[#F5F7F8] py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <div className="mb-6 flex justify-center">
@@ -23,7 +23,7 @@ export default function RealEstate() {
             Know Exactly What to Do Next When Buying or Selling Your Home
           </h1>
           <p className="text-xl text-muted-foreground mb-10">
-            Avoid overpaying for or underselling your home with the help of a RamseyTrusted® real estate agent.
+            Avoid overpaying for or underselling your home with the help of a RamseyTrusted real estate agent.
           </p>
 
           <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl mx-auto border border-border">
@@ -55,7 +55,6 @@ export default function RealEstate() {
         </div>
       </section>
 
-      {/* Content Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-16 items-center">
           <div>
@@ -63,27 +62,50 @@ export default function RealEstate() {
               Worried you'll make an expensive buying or selling mistake?
             </h2>
             <p className="text-lg text-muted-foreground mb-6">
-              Buying or selling a home is one of the biggest financial decisions you’ll ever make . . . and it can feel nerve-racking. Between house-hunting, showings, paperwork, inspections, and negotiations, there’s a lot to learn and a lot that feels confusing. But you shouldn’t have to feel lost or figure it out on your own.
+              Buying or selling a home is one of the biggest financial decisions you'll ever make . . . and it can feel nerve-racking. Between house-hunting, showings, paperwork, inspections, and negotiations, there's a lot to learn and a lot that feels confusing.
             </p>
             <p className="text-lg text-muted-foreground">
-              That’s why Dave Ramsey created RamseyTrusted—a way to connect you with carefully vetted agents (for free) who’ll guide you through every step to buy or sell your home with confidence.
+              That's why Dave Ramsey created RamseyTrusted — a way to connect you with carefully vetted agents (for free) who'll guide you through every step to buy or sell your home with confidence.
             </p>
           </div>
           <div className="relative">
-            {/* Using an unsplash real estate agent placeholder since original URL wasn't perfectly parsed */}
-            {/* real estate agent showing house to happy couple */}
-            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80" alt="Agent showing home" className="rounded-2xl shadow-2xl" />
-            <div className="absolute -bottom-10 -left-10 bg-white p-6 rounded-2xl shadow-xl border border-border hidden md:block">
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                  <CheckCircle2 className="w-8 h-8 text-secondary" />
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-12 text-center">
+              <img src="https://cdn.ramseysolutions.net/daveramsey.com/media/b2c/ramsey-trusted/global-brand-assets/logos/ramseytrusted-logo/rt-shield-orange.svg" alt="RamseyTrusted" className="h-24 mx-auto mb-6" />
+              <h3 className="text-2xl font-bold text-primary mb-4">RamseyTrusted Agents</h3>
+              <p className="text-muted-foreground mb-6">Vetted. Trained. Ready to help you win.</p>
+              <Link href="/trusted" className="bg-accent text-primary font-bold px-6 py-3 rounded-xl hover:bg-yellow-300 transition-colors shadow inline-block">
+                Find an Agent
+              </Link>
+            </div>
+            <div className="absolute -bottom-6 -left-6 bg-white p-5 rounded-2xl shadow-xl border border-border hidden md:block">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <CheckCircle2 className="w-6 h-6 text-secondary" />
                 </div>
                 <div>
-                  <p className="font-bold text-primary">Matched with an agent</p>
-                  <p className="text-sm text-muted-foreground">Response time: &lt; 5 mins</p>
+                  <p className="font-bold text-primary text-sm">Matched with an agent</p>
+                  <p className="text-xs text-muted-foreground">Response time: &lt; 5 mins</p>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-4xl font-bold text-primary text-center mb-16">Why Use a RamseyTrusted Agent?</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { title: "Vetted by Ramsey", desc: "Every agent goes through a rigorous screening process to make sure they have the heart of a teacher and the skills of a top performer." },
+              { title: "Free to You", desc: "There's no cost to get connected with a RamseyTrusted real estate agent. The seller typically pays the agent's commission." },
+              { title: "Local Experts", desc: "Your agent knows the local market inside and out. They'll help you navigate every step of the buying or selling process." },
+            ].map((item, i) => (
+              <div key={i} className="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
+                <h3 className="text-2xl font-bold text-primary mb-4">{item.title}</h3>
+                <p className="text-lg text-muted-foreground">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -55,7 +55,7 @@ export default function SignIn() {
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="block text-sm font-bold text-primary">Password</label>
-              <a href="#" className="text-sm font-semibold text-secondary hover:underline">Forgot password?</a>
+              <Link href="/sign-in" className="text-sm font-semibold text-secondary hover:underline">Forgot password?</Link>
             </div>
             <input
               type="password"
