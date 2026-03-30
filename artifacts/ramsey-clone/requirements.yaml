@@ -10,4 +10,4 @@ images: []
 notes:
   - "Using provided CDN image URLs from Ramsey Solutions directly as requested."
   - "Forms use mocked onSubmit handlers with toasts since backend auth is out of scope."
-  - "Routing is handled client-side via Wouter."
+  - "Routing is handled client-side via React Router (react-router-dom)."

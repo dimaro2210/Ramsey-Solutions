@@ -118,9 +118,9 @@ export default function InsuranceType() {
             ))}
           </div>
           <div className="mt-12 text-center">
-            <button className="bg-accent text-primary font-bold text-lg px-10 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
+            <Link to="/trusted" className="bg-accent text-primary font-bold text-lg px-10 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg inline-block">
               {data.cta}
-            </button>
+            </Link>
           </div>
         </div>
       </section>
