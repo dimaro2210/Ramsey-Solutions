@@ -39,12 +39,37 @@ export default function Home() {
   return (
     <div className="w-full">
       {/* SECTION 1 - HERO */}
-      <section className="relative overflow-hidden text-white" style={{
-        background: `linear-gradient(to bottom, transparent 60%, #001934 100%), url('/hero/bg-personalities-desktop-tablet-v2.jpg') top center / cover no-repeat, linear-gradient(#001934, #001934)`
-      }}>
-        <div className="max-w-7xl mx-auto relative z-10 pt-16 pb-8 px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-8">
-            <h1 className="mb-6">
+      <section className="relative overflow-hidden text-white hero-section">
+        <style>{`
+          .hero-section {
+            background:
+              url('/hero/bg-gradient.png') bottom center / contain repeat-x,
+              url('/hero/bg-buckets-mobile.jpg') top center / 115% no-repeat,
+              linear-gradient(#001934, #001934);
+          }
+          @media (min-width: 600px) {
+            .hero-section {
+              background:
+                url('/hero/personalities-positioned.png') center 40% / 100% no-repeat,
+                url('/hero/bg-gradient.png') bottom center / contain repeat-x,
+                url('/hero/bg-personalities-desktop-tablet-v2.jpg') top center / cover no-repeat,
+                linear-gradient(#003561, #003561);
+            }
+          }
+          @media (min-width: 1200px) {
+            .hero-section {
+              background:
+                url('/hero/personalities-positioned.png') center 35% / 1440px no-repeat,
+                url('/hero/bg-gradient.png') bottom center / contain repeat-x,
+                url('/hero/bg-personalities-desktop-large-v2.jpg') top center / cover no-repeat,
+                linear-gradient(#003561, #003561);
+            }
+          }
+        `}</style>
+
+        <div className="max-w-7xl mx-auto relative z-10 pt-12 md:pt-16 pb-4 md:pb-8 px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-6 md:mb-8">
+            <h1 className="mb-4 md:mb-6">
               <picture>
                 <source
                   srcSet="/hero/h1-live-like-no-one-else-desktop-large-tablet.svg"
@@ -54,31 +79,27 @@ export default function Home() {
                 <img
                   src="/hero/h1-live-like-no-one-else-mobile-2.svg"
                   alt="Live Like No One Else"
-                  className="mx-auto max-w-[547px] w-[70%] md:w-[60%]"
+                  className="mx-auto w-[270px] md:max-w-[547px] md:w-[60%]"
                 />
               </picture>
             </h1>
-            <p className="text-lg md:text-xl text-white/90 font-normal max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-white/90 font-normal max-w-2xl mx-auto px-4">
               Get expert advice, free tools and proven plans to help you manage your finances, work and relationships.
             </p>
           </div>
         </div>
 
-        <div className="relative z-10">
-          <img
-            src="/hero/personalities-positioned.png"
-            alt="Ramsey Personalities"
-            className="hidden md:block mx-auto"
-            style={{ width: '100%', maxWidth: '1440px' }}
-          />
-          <img
-            src="/hero/personalities-and-bottom-gradient-01.png"
-            alt="Ramsey Personalities"
-            className="md:hidden mx-auto w-full"
-          />
+        <div className="relative z-10 md:min-h-[400px] lg:min-h-[500px]">
+          <div className="md:hidden flex justify-center overflow-hidden px-4">
+            <img
+              src="/hero/personalities-positioned.png"
+              alt="Ramsey Personalities"
+              className="w-[140%] max-w-none -mx-[20%]"
+            />
+          </div>
         </div>
 
-        <div className="relative z-10 pb-16 px-4 sm:px-6 lg:px-8" style={{ background: '#001934' }}>
+        <div className="relative z-10 pt-4 pb-16 md:pb-20 px-4 sm:px-6 lg:px-8" style={{ background: 'linear-gradient(to bottom, transparent, #001934 20%)' }}>
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {heroCards.map((card, idx) => {
@@ -99,7 +120,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 2 - ASK RAMSEY */}
-      <section className="bg-primary text-white py-20 border-t-8 border-accent">
+      <section className="bg-primary text-white pt-20 pb-20 border-t-4 border-accent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-4xl md:text-5xl font-black italic tracking-tight mb-4">
