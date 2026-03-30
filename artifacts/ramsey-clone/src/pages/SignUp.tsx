@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -90,7 +90,7 @@ export default function SignUp() {
         <div className="mt-6 text-center">
           <p className="text-muted-foreground font-medium text-sm">
             Already have an account?{" "}
-            <Link href="/sign-in" className="text-secondary font-bold hover:underline">
+            <Link to="/sign-in" className="text-secondary font-bold hover:underline">
               Sign In
             </Link>
           </p>

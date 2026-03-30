@@ -41,6 +41,32 @@ export default function SmartVestor() {
         </div>
       </section>
 
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-4xl font-bold text-primary text-center mb-6">What Is SmartVestor?</h2>
+          <p className="text-xl text-muted-foreground text-center max-w-3xl mx-auto mb-16">
+            SmartVestor is a free service from Ramsey Solutions that connects you with investing professionals in your area. These pros have been vetted by our team and have the heart of a teacher.
+          </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-8 rounded-2xl bg-blue-50">
+              <div className="w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-black">1</div>
+              <h3 className="font-bold text-xl text-primary mb-3">Tell Us About Yourself</h3>
+              <p className="text-muted-foreground">Enter your zip code and answer a few quick questions about your financial situation and goals.</p>
+            </div>
+            <div className="text-center p-8 rounded-2xl bg-blue-50">
+              <div className="w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-black">2</div>
+              <h3 className="font-bold text-xl text-primary mb-3">Get Matched With Pros</h3>
+              <p className="text-muted-foreground">We'll connect you with up to five SmartVestor Pros near you. They'll reach out to schedule an introductory meeting.</p>
+            </div>
+            <div className="text-center p-8 rounded-2xl bg-blue-50">
+              <div className="w-16 h-16 bg-secondary text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-black">3</div>
+              <h3 className="font-bold text-xl text-primary mb-3">Choose the Right Fit</h3>
+              <p className="text-muted-foreground">Interview your pros, compare their approaches, and pick the one that feels right for you. No pressure, no obligation.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-20 bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-16 items-center">
           <div>

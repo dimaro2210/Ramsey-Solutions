@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -55,7 +55,7 @@ export default function SignIn() {
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="block text-sm font-bold text-primary">Password</label>
-              <Link href="/sign-in" className="text-sm font-semibold text-secondary hover:underline">Forgot password?</Link>
+              <Link to="/sign-in" className="text-sm font-semibold text-secondary hover:underline">Forgot password?</Link>
             </div>
             <input
               type="password"
@@ -79,7 +79,7 @@ export default function SignIn() {
         <div className="mt-8 text-center">
           <p className="text-muted-foreground font-medium">
             Don't have an account?{" "}
-            <Link href="/sign-up" className="text-secondary font-bold hover:underline">
+            <Link to="/sign-up" className="text-secondary font-bold hover:underline">
               Sign Up
             </Link>
           </p>

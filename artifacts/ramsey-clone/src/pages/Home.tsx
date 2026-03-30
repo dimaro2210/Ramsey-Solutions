@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 
@@ -125,7 +125,7 @@ export default function Home() {
                 You work too hard to live paycheck to paycheck. Whether you’re struggling with debt or building your savings, the 7 Baby Steps will help you take control of your money for good.
               </p>
             </div>
-            <Link href="/dave-ramsey-7-baby-steps" className="mt-6 md:mt-0 font-bold text-secondary hover:underline inline-flex items-center text-lg">
+            <Link to="/dave-ramsey-7-baby-steps" className="mt-6 md:mt-0 font-bold text-secondary hover:underline inline-flex items-center text-lg">
               Explore All Steps <ChevronRight className="ml-1 w-5 h-5" />
             </Link>
           </div>
@@ -221,7 +221,7 @@ export default function Home() {
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
               Trust isn’t something that’s gained just once. It’s maintained day in and day out. That’s why each provider in our RamseyTrusted® pros network is vetted by our team of experts.
             </p>
-            <Link href="/trusted" className="inline-block bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 hover:scale-105 transition-all shadow-lg">
+            <Link to="/trusted" className="inline-block bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 hover:scale-105 transition-all shadow-lg">
               Find a Trusted Pro
             </Link>
           </div>

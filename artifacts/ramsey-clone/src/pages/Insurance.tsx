@@ -1,15 +1,15 @@
-import { Link } from "wouter";
-import { ShieldCheck, Home, Car, HeartPulse, UserCircle, Briefcase, Pill, Stethoscope } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ShieldCheck, Home, HeartPulse, UserCircle, Briefcase, Pill, Stethoscope } from "lucide-react";
 
 export default function Insurance() {
   const insurances = [
-    { title: "Home & Auto Bundle", icon: <Home className="w-8 h-8" /> },
-    { title: "Term Life Insurance", icon: <HeartPulse className="w-8 h-8" /> },
-    { title: "ID Theft Protection", icon: <UserCircle className="w-8 h-8" /> },
-    { title: "Wills", icon: <Briefcase className="w-8 h-8" /> },
-    { title: "Health Insurance", icon: <Stethoscope className="w-8 h-8" /> },
-    { title: "Medicare", icon: <Pill className="w-8 h-8" /> },
-    { title: "Long-Term Care", icon: <ShieldCheck className="w-8 h-8" /> }
+    { title: "Home & Auto Bundle", icon: <Home className="w-8 h-8" />, slug: "home-auto" },
+    { title: "Term Life Insurance", icon: <HeartPulse className="w-8 h-8" />, slug: "term-life" },
+    { title: "ID Theft Protection", icon: <UserCircle className="w-8 h-8" />, slug: "id-theft" },
+    { title: "Wills", icon: <Briefcase className="w-8 h-8" />, slug: "wills" },
+    { title: "Health Insurance", icon: <Stethoscope className="w-8 h-8" />, slug: "health" },
+    { title: "Medicare", icon: <Pill className="w-8 h-8" />, slug: "medicare" },
+    { title: "Long-Term Care", icon: <ShieldCheck className="w-8 h-8" />, slug: "long-term-care" }
   ];
 
   return (
@@ -25,7 +25,7 @@ export default function Insurance() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {insurances.map((item, idx) => (
-              <Link key={idx} href="/insurance" className="bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:border-secondary transition-all group flex flex-col items-center justify-center text-center h-48">
+              <Link key={idx} to={`/insurance/${item.slug}`} className="bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:border-secondary transition-all group flex flex-col items-center justify-center text-center h-48">
                 <div className="text-secondary mb-4 group-hover:scale-110 transition-transform bg-blue-50 p-4 rounded-full">
                   {item.icon}
                 </div>
@@ -63,7 +63,7 @@ export default function Insurance() {
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-4xl font-bold mb-6">Don't Leave Your Family Unprotected</h2>
           <p className="text-xl text-blue-100 mb-10">The right insurance plan protects everything you've worked for. Our RamseyTrusted pros will help you find the best coverage at the best price.</p>
-          <Link href="/trusted" className="inline-block bg-accent text-primary font-bold text-lg px-10 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
+          <Link to="/trusted" className="inline-block bg-accent text-primary font-bold text-lg px-10 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
             Find a Trusted Pro
           </Link>
         </div>

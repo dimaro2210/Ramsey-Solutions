@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 export default function Shows() {
   const shows = [
@@ -34,7 +34,7 @@ export default function Shows() {
             <div className="p-10 w-full md:w-1/2">
               <h3 className="text-4xl font-bold mb-4">The Ramsey Show</h3>
               <p className="text-gray-400 mb-8 text-lg">Listen Live Weekdays at 2PM ET<br />Watch Live Weekdays at 4PM ET</p>
-              <Link href="/shows/the-ramsey-show" className="bg-white text-black font-bold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors inline-block">
+              <Link to="/shows/the-ramsey-show" className="bg-white text-black font-bold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors inline-block">
                 View Show Details
               </Link>
             </div>

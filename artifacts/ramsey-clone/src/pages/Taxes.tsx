@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { ChevronRight, FileText, Calculator, Users, ShieldCheck } from "lucide-react";
 
 export default function Taxes() {
@@ -6,7 +6,7 @@ export default function Taxes() {
     <div className="w-full">
       <div className="bg-primary text-white text-center py-3 px-4 text-sm font-bold tracking-wide">
         File Federal Taxes for $39.95 Through 4/10{" "}
-        <Link href="/taxes" className="underline ml-2">Get Started</Link>
+        <Link to="/taxes" className="underline ml-2">Get Started</Link>
       </div>
 
       <section className="bg-[#f2f8fc] pt-16 pb-24 border-b border-border">
@@ -17,7 +17,7 @@ export default function Taxes() {
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10">
             Learn the best way to file your taxes with confidence — and keep more money in your pocket — with trusted guides, services and tools.
           </p>
-          <Link href="/trusted" className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg inline-block">
+          <Link to="/trusted" className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg inline-block">
             Start Filing Now
           </Link>
         </div>
@@ -91,7 +91,7 @@ export default function Taxes() {
                 </li>
               ))}
             </ul>
-            <Link href="/trusted" className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg inline-block">
+            <Link to="/trusted" className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg inline-block">
               Find a Tax Pro
             </Link>
           </div>
@@ -120,7 +120,7 @@ export default function Taxes() {
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-4xl font-bold mb-6">Ready to File Your Taxes?</h2>
           <p className="text-xl text-blue-100 mb-10">File fast, file right, and keep more of your hard-earned money.</p>
-          <Link href="/trusted" className="inline-block bg-accent text-primary font-bold text-lg px-10 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
+          <Link to="/trusted" className="inline-block bg-accent text-primary font-bold text-lg px-10 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
             Get Started Now
           </Link>
         </div>

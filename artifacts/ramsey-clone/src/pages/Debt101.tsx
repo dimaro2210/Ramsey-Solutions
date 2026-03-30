@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
 export default function Debt101() {
@@ -79,7 +79,7 @@ export default function Debt101() {
           <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
             It's impossible to build wealth when you're in a cycle of never-ending debt. Find out how to manage your money the right way and get started on the life you were meant to live.
           </p>
-          <Link href="/money/everydollar" className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg inline-block">
+          <Link to="/money/everydollar" className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg inline-block">
             Pay Off Debt Now
           </Link>
         </div>
@@ -119,7 +119,7 @@ export default function Debt101() {
                   <h3 className="text-2xl font-bold text-primary">{section.articleTitle}</h3>
                 </div>
                 <p className="text-lg text-muted-foreground mb-4">{section.articleDesc}</p>
-                <Link href="/debt/debt-101" className="text-secondary font-bold hover:underline inline-flex items-center">
+                <Link to="/debt/debt-101" className="text-secondary font-bold hover:underline inline-flex items-center">
                   {section.articleLink} <ChevronRight className="w-4 h-4 ml-1" />
                 </Link>
               </div>
@@ -130,7 +130,7 @@ export default function Debt101() {
                   <h3 className="text-2xl font-bold text-primary">{section.toolTitle}</h3>
                 </div>
                 <p className="text-lg text-muted-foreground mb-4">{section.toolDesc}</p>
-                <Link href="/money/everydollar" className="text-secondary font-bold hover:underline inline-flex items-center">
+                <Link to="/money/everydollar" className="text-secondary font-bold hover:underline inline-flex items-center">
                   {section.toolLink} <ChevronRight className="w-4 h-4 ml-1" />
                 </Link>
               </div>
@@ -147,7 +147,7 @@ export default function Debt101() {
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-4xl font-bold mb-6">Ready to Get Out of Debt?</h2>
           <p className="text-xl text-blue-100 mb-10">Start your journey to financial peace with EveryDollar and the debt snowball method.</p>
-          <Link href="/money/everydollar" className="inline-block bg-accent text-primary font-bold text-lg px-10 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
+          <Link to="/money/everydollar" className="inline-block bg-accent text-primary font-bold text-lg px-10 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
             Start Budgeting for Free
           </Link>
         </div>

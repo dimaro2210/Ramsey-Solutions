@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle2 } from "lucide-react";
 
@@ -73,7 +73,7 @@ export default function RealEstate() {
               <img src="https://cdn.ramseysolutions.net/daveramsey.com/media/b2c/ramsey-trusted/global-brand-assets/logos/ramseytrusted-logo/rt-shield-orange.svg" alt="RamseyTrusted" className="h-24 mx-auto mb-6" />
               <h3 className="text-2xl font-bold text-primary mb-4">RamseyTrusted Agents</h3>
               <p className="text-muted-foreground mb-6">Vetted. Trained. Ready to help you win.</p>
-              <Link href="/trusted" className="bg-accent text-primary font-bold px-6 py-3 rounded-xl hover:bg-yellow-300 transition-colors shadow inline-block">
+              <Link to="/trusted" className="bg-accent text-primary font-bold px-6 py-3 rounded-xl hover:bg-yellow-300 transition-colors shadow inline-block">
                 Find an Agent
               </Link>
             </div>

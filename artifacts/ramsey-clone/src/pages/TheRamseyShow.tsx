@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 export default function TheRamseyShow() {
   return (
@@ -53,7 +53,7 @@ export default function TheRamseyShow() {
         </div>
 
         <div className="text-center">
-          <Link href="/shows" className="bg-white text-black font-bold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors inline-block">
+          <Link to="/shows" className="bg-white text-black font-bold px-8 py-3 rounded-full hover:bg-gray-200 transition-colors inline-block">
             Browse All Shows
           </Link>
         </div>
