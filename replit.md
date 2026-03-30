@@ -94,3 +94,26 @@ Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHea
 ### `scripts` (`@workspace/scripts`)
 
 Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
+
+### `artifacts/ramsey-clone` (`@workspace/ramsey-clone`)
+
+Full clone of ramseysolutions.com built with React + Vite + Tailwind CSS v4. Uses wouter for routing and framer-motion for animations.
+
+- **Brand colors**: Primary #003561 (dark blue), Secondary #0073B9 (link blue), Accent #FCD214 (CTA yellow)
+- **CDN images**: All images load directly from `cdn.ramseysolutions.net` (no local copies)
+- **Pages (13 total)**:
+  - `/` — Homepage with 8 sections (hero cards, Ask Ramsey, stats, Baby Steps carousel, quiz, Small Steps, Trusted Pros, Testimonials)
+  - `/sign-in` — Sign In form
+  - `/sign-up` — Sign Up form with validation
+  - `/debt/debt-101` — Debt 101 guide
+  - `/real-estate/residential-real-estate` — Real Estate page
+  - `/money/everydollar` — EveryDollar budgeting app page with phone mockup
+  - `/taxes` — Tax filing page
+  - `/retirement/smartvestor` — SmartVestor investing page
+  - `/insurance` — Insurance types with Coverage Checkup CTA
+  - `/shows` — Shows hub page
+  - `/shows/the-ramsey-show` — The Ramsey Show page
+  - `/dave-ramsey-7-baby-steps` — 7 Baby Steps page
+  - `/trusted` — RamseyTrusted pros page
+- **Layout**: Sticky header with Ramsey logo, search, nav with dropdowns, mobile menu. Dark blue footer with link columns and social icons.
+- **Dependencies**: wouter, framer-motion, lucide-react, react-hook-form, zod, @tanstack/react-query
