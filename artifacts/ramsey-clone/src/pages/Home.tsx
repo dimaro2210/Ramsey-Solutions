@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 
 export default function Home() {
   const heroCards = [
@@ -11,7 +12,7 @@ export default function Home() {
     { title: "Start Investing", href: "/retirement/smartvestor", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-investing-2x.png" },
     { title: "Plan for Retirement", href: "/retirement/smartvestor", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-retirement-2x.png" },
     { title: "Find Your Insurance", href: "/insurance", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-insurance-2x.png" },
-    { title: "Shop the Store", href: "/dave-ramsey-7-baby-steps", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-store-2x.png" }
+    { title: "Shop the Store", href: "https://store.ramseysolutions.com", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-store-2x.png", external: true }
   ];
 
   const babySteps = [
@@ -48,12 +49,18 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {heroCards.map((card, idx) => (
-              <Link key={idx} to={card.href} className="bg-white rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer border border-white/20">
+            {heroCards.map((card, idx) => {
+              const cls = "bg-white rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer border border-white/20";
+              const inner = (<>
                 <img src={card.icon} alt={card.title} className="w-20 h-20 object-contain mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <span className="font-bold text-primary text-lg">{card.title}</span>
-              </Link>
-            ))}
+              </>);
+              return (card as any).external ? (
+                <a key={idx} href={card.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+              ) : (
+                <Link key={idx} to={card.href} className={cls}>{inner}</Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -226,12 +233,32 @@ export default function Home() {
       </section>
 
       {/* SECTION 8 - TESTIMONIALS */}
-      <section className="py-24 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary">Real People. Real Stories. Real Financial Peace.</h2>
-        </div>
-        
-        <div className="flex overflow-x-auto pb-12 px-4 gap-8 hide-scrollbar snap-x max-w-7xl mx-auto">
+      <TestimonialCarousel testimonials={testimonials} />
+    </div>
+  );
+}
+
+function TestimonialCarousel({ testimonials }: { testimonials: { name: string; quote: string; img: string }[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const amount = direction === "left" ? -380 : 380;
+      scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
+    }
+  };
+  return (
+    <section className="py-24 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold text-primary">Real People. Real Stories. Real Financial Peace.</h2>
+      </div>
+      <div className="relative max-w-7xl mx-auto px-4">
+        <button onClick={() => scroll("left")} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg border border-gray-200 rounded-full p-3 hover:bg-gray-50 transition-colors" aria-label="Previous testimonial">
+          <ChevronLeft className="w-6 h-6 text-primary" />
+        </button>
+        <button onClick={() => scroll("right")} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg border border-gray-200 rounded-full p-3 hover:bg-gray-50 transition-colors" aria-label="Next testimonial">
+          <ChevronRight className="w-6 h-6 text-primary" />
+        </button>
+        <div ref={scrollRef} className="flex overflow-x-auto pb-12 px-12 gap-8 hide-scrollbar snap-x scroll-smooth">
           {testimonials.map((t, i) => (
             <div key={i} className="flex-none w-[350px] snap-center bg-gray-50 p-8 rounded-2xl border border-gray-200 flex flex-col items-center text-center">
               <img src={t.img} alt={t.name} className="w-24 h-24 rounded-full object-cover mb-6 border-4 border-white shadow-md" />
@@ -240,7 +267,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

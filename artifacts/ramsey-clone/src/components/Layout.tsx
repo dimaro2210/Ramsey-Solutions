@@ -222,10 +222,10 @@ export function Layout({ children }: { children: ReactNode }) {
             <div>
               <h4 className="font-bold text-lg mb-4 text-white">About</h4>
               <ul className="space-y-3 text-sm text-gray-300">
-                <li><Link to="/" className="hover:text-accent transition-colors">Our Story</Link></li>
-                <li><Link to="/" className="hover:text-accent transition-colors">Careers</Link></li>
-                <li><Link to="/" className="hover:text-accent transition-colors">Contact Us</Link></li>
-                <li><Link to="/" className="hover:text-accent transition-colors">Newsroom</Link></li>
+                <li><a href="https://www.ramseysolutions.com/company" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Our Story</a></li>
+                <li><a href="https://www.ramseysolutions.com/careers" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Careers</a></li>
+                <li><a href="https://www.ramseysolutions.com/contact-us" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Contact Us</a></li>
+                <li><a href="https://www.ramseysolutions.com/press" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Newsroom</a></li>
               </ul>
             </div>
 
@@ -272,10 +272,10 @@ export function Layout({ children }: { children: ReactNode }) {
             <div className="flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
               <p>&copy; {new Date().getFullYear()} Lampo Licensing, LLC. All rights reserved.</p>
               <div className="flex flex-wrap gap-4 mt-2 md:mt-0">
-                <Link to="/" className="hover:text-gray-300">Terms of Use</Link>
-                <Link to="/" className="hover:text-gray-300">Privacy Policy</Link>
-                <Link to="/" className="hover:text-gray-300">Accessibility</Link>
-                <Link to="/" className="hover:text-gray-300">Editorial Guidelines</Link>
+                <a href="https://www.ramseysolutions.com/terms-of-use" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300">Terms of Use</a>
+                <a href="https://www.ramseysolutions.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300">Privacy Policy</a>
+                <a href="https://www.ramseysolutions.com/accessibility" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300">Accessibility</a>
+                <a href="https://www.ramseysolutions.com/editorial-guidelines" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300">Editorial Guidelines</a>
               </div>
             </div>
           </div>
