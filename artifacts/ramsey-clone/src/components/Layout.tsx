@@ -143,9 +143,9 @@ export function Layout({ children }: { children: ReactNode }) {
                 )}
               </div>
             ))}
-            <Link to="/dave-ramsey-7-baby-steps" className="flex items-center text-sm font-semibold text-secondary hover:underline px-2 py-1">
+            <a href="https://store.ramseysolutions.com" target="_blank" rel="noopener noreferrer" className="flex items-center text-sm font-semibold text-secondary hover:underline px-2 py-1">
               Store
-            </Link>
+            </a>
           </div>
         </div>
 

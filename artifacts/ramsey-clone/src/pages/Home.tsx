@@ -68,12 +68,9 @@ export default function Home() {
             <p className="text-xl text-blue-100 mb-8 max-w-lg">
               Get AI-powered money advice built on the same principles you trust from The Ramsey Show.
             </p>
-            <button 
-              onClick={() => window.alert("AI Assistant opening...")}
-              className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 hover:scale-105 transition-all shadow-lg inline-flex items-center"
-            >
+            <Link to="/shows/the-ramsey-show" className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 hover:scale-105 transition-all shadow-lg inline-flex items-center">
               Ask Ramsey <ChevronRight className="ml-2 w-5 h-5" />
-            </button>
+            </Link>
           </div>
           <div className="relative">
             <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl relative bg-gradient-to-br from-blue-900 to-primary border-4 border-white/10 flex items-center justify-center">
@@ -166,12 +163,12 @@ export default function Home() {
               "I know I could manage my money better with the right plan.",
               "I feel on track with my money but need help with investing."
             ].map((text, i) => (
-              <button key={i} onClick={() => alert("Assessment started")} className="bg-white p-6 rounded-xl shadow border-2 border-transparent hover:border-secondary hover:shadow-lg transition-all text-left group flex items-start">
+              <Link key={i} to="/dave-ramsey-7-baby-steps" className="bg-white p-6 rounded-xl shadow border-2 border-transparent hover:border-secondary hover:shadow-lg transition-all text-left group flex items-start">
                 <div className="w-8 h-8 rounded-full bg-blue-50 text-secondary flex items-center justify-center font-bold mr-4 shrink-0 group-hover:bg-secondary group-hover:text-white transition-colors">
                   {String.fromCharCode(65 + i)}
                 </div>
                 <span className="font-semibold text-primary text-lg">{text}</span>
-              </button>
+              </Link>
             ))}
           </div>
         </div>
