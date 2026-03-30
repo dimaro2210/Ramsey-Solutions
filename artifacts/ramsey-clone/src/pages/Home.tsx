@@ -39,30 +39,61 @@ export default function Home() {
   return (
     <div className="w-full">
       {/* SECTION 1 - HERO */}
-      <section className="bg-gradient-to-b from-primary to-[#005a9c] py-20 px-4 sm:px-6 lg:px-8 text-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter mb-6 text-white drop-shadow-lg">
-              Live Like No One Else
+      <section className="relative overflow-hidden text-white" style={{
+        background: `linear-gradient(to bottom, transparent 60%, #001934 100%), url('/hero/bg-personalities-desktop-tablet-v2.jpg') top center / cover no-repeat, linear-gradient(#001934, #001934)`
+      }}>
+        <div className="max-w-7xl mx-auto relative z-10 pt-16 pb-8 px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-8">
+            <h1 className="mb-6">
+              <picture>
+                <source
+                  srcSet="/hero/h1-live-like-no-one-else-desktop-large-tablet.svg"
+                  media="(min-width: 600px)"
+                  type="image/svg+xml"
+                />
+                <img
+                  src="/hero/h1-live-like-no-one-else-mobile-2.svg"
+                  alt="Live Like No One Else"
+                  className="mx-auto max-w-[547px] w-[70%] md:w-[60%]"
+                />
+              </picture>
             </h1>
-            <p className="text-xl md:text-2xl text-blue-100 font-medium">
+            <p className="text-lg md:text-xl text-white/90 font-normal max-w-2xl mx-auto">
               Get expert advice, free tools and proven plans to help you manage your finances, work and relationships.
             </p>
           </div>
+        </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {heroCards.map((card, idx) => {
-              const cls = "bg-white rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer border border-white/20";
-              const inner = (<>
-                <img src={card.icon} alt={card.title} className="w-20 h-20 object-contain mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <span className="font-bold text-primary text-lg">{card.title}</span>
-              </>);
-              return card.external ? (
-                <a key={idx} href={card.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
-              ) : (
-                <Link key={idx} to={card.href} className={cls}>{inner}</Link>
-              );
-            })}
+        <div className="relative z-10">
+          <img
+            src="/hero/personalities-positioned.png"
+            alt="Ramsey Personalities"
+            className="hidden md:block mx-auto"
+            style={{ width: '100%', maxWidth: '1440px' }}
+          />
+          <img
+            src="/hero/personalities-and-bottom-gradient-01.png"
+            alt="Ramsey Personalities"
+            className="md:hidden mx-auto w-full"
+          />
+        </div>
+
+        <div className="relative z-10 pb-16 px-4 sm:px-6 lg:px-8" style={{ background: '#001934' }}>
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {heroCards.map((card, idx) => {
+                const cls = "bg-white rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer";
+                const inner = (<>
+                  <img src={card.icon} alt={card.title} className="w-20 h-20 object-contain mb-4 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="font-bold text-primary text-lg">{card.title}</span>
+                </>);
+                return card.external ? (
+                  <a key={idx} href={card.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+                ) : (
+                  <Link key={idx} to={card.href} className={cls}>{inner}</Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
