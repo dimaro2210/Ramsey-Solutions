@@ -29,6 +29,8 @@ import Withdraw from "@/pages/dashboard/Withdraw";
 import TradingHistory from "@/pages/dashboard/TradingHistory";
 import Support from "@/pages/dashboard/Support";
 import Profile from "@/pages/dashboard/Profile";
+import Settings from "@/pages/dashboard/Settings";
+import Notifications from "@/pages/dashboard/Notifications";
 import { ReactNode } from "react";
 
 const queryClient = new QueryClient();
@@ -50,6 +52,8 @@ function AppRoutes() {
       <Route path="/dashboard/history" element={<ProtectedRoute><DashboardLayout><TradingHistory /></DashboardLayout></ProtectedRoute>} />
       <Route path="/dashboard/support" element={<ProtectedRoute><DashboardLayout><Support /></DashboardLayout></ProtectedRoute>} />
       <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardLayout><Profile /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/dashboard/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/dashboard/notifications" element={<ProtectedRoute><DashboardLayout><Notifications /></DashboardLayout></ProtectedRoute>} />
 
       <Route path="/" element={<Layout><Home /></Layout>} />
       <Route path="/sign-in" element={<Layout><SignIn /></Layout>} />

@@ -10,9 +10,9 @@ import {
   LogOut,
   Menu,
   X,
-
   User,
-  UserCog,
+  Settings,
+  Bell,
 } from "lucide-react";
 
 const sidebarLinks = [
@@ -20,7 +20,7 @@ const sidebarLinks = [
   { label: "Deposit", href: "/dashboard/deposit", icon: ArrowDownToLine },
   { label: "Withdraw", href: "/dashboard/withdraw", icon: ArrowUpFromLine },
   { label: "Trading History", href: "/dashboard/history", icon: History },
-  { label: "Profile", href: "/dashboard/profile", icon: UserCog },
+  { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -33,6 +33,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     logout();
     navigate("/");
   };
+
+  const unreadNotifications = 4;
 
   return (
     <div className="min-h-screen bg-[#f0f4f8] text-[#003561] flex">
@@ -120,7 +122,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               </p>
               <p className="text-xs text-gray-500">{user?.email}</p>
             </div>
-            <Link to="/dashboard/profile" className="w-9 h-9 rounded-full bg-[#003561] flex items-center justify-center overflow-hidden">
+
+            <Link
+              to="/dashboard/notifications"
+              className="relative w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            >
+              <Bell className="w-5 h-5 text-[#003561]/60" />
+              {unreadNotifications > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {unreadNotifications}
+                </span>
+              )}
+            </Link>
+
+            <Link to="/dashboard/profile" className="w-9 h-9 rounded-full bg-[#003561] flex items-center justify-center overflow-hidden hover:ring-2 hover:ring-[#0073B9]/30 transition-all">
               {user?.profilePicture ? (
                 <img src={user.profilePicture} alt="Profile" className="w-full h-full object-cover" />
               ) : (
