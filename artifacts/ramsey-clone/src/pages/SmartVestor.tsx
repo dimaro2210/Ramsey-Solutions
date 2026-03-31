@@ -1,15 +1,78 @@
-import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { X, TrendingUp, CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function SmartVestor() {
-  const { toast } = useToast();
+  const [zipCode, setZipCode] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({ title: "Searching Pros...", description: "Looking up SmartVestor Pros in your area." });
+    if (zipCode.length >= 5) {
+      setShowModal(true);
+    }
   };
 
   return (
     <div className="w-full">
+      {showModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowModal(false)} />
+          <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center z-10 transition-colors"
+            >
+              <X className="w-4 h-4 text-gray-500" />
+            </button>
+
+            <div className="bg-gradient-to-br from-[#003561] to-[#0073B9] p-8 text-center">
+              <div className="w-16 h-16 bg-[#FCD214] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <TrendingUp className="w-8 h-8 text-[#003561]" />
+              </div>
+              <h2 className="text-2xl font-bold text-white">Great News!</h2>
+              <p className="text-blue-200 text-sm mt-1">Investment feature available in your area</p>
+            </div>
+
+            <div className="p-8">
+              <div className="flex items-center gap-2 mb-4 text-green-600 text-sm font-medium">
+                <CheckCircle2 className="w-5 h-5" />
+                <span>Ramsey Invest is available in {zipCode}</span>
+              </div>
+
+              <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                You can start investing today with <strong>Ramsey Invest</strong> — our expert-managed crypto and stock trading platform.
+                Join thousands of people growing their wealth with zero trading experience required. Our certified advisors handle everything for you.
+              </p>
+
+              <ul className="space-y-2 mb-6">
+                {["Expert-managed portfolio", "Crypto & stock investments", "No trading knowledge needed", "Start with as little as $100"].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-sm text-gray-600">
+                    <CheckCircle2 className="w-4 h-4 text-[#0073B9] flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                onClick={() => { setShowModal(false); navigate("/sign-up"); }}
+                className="w-full py-3.5 bg-[#FCD214] hover:bg-yellow-300 text-[#003561] rounded-xl font-bold text-base transition-colors flex items-center justify-center gap-2 shadow-md"
+              >
+                Sign Up for Ramsey Invest
+                <ArrowRight className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="w-full py-2 text-gray-400 text-sm mt-3 hover:text-gray-600 transition-colors"
+              >
+                Maybe later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <section className="bg-gradient-to-b from-[#f2f8fc] to-white py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <img src="https://cdn.ramseysolutions.net/cms/sites/daveramsey-com/smartvestor/home/sv-logo.svg" alt="SmartVestor" className="h-16 mx-auto mb-8" />
@@ -29,9 +92,12 @@ export default function SmartVestor() {
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
               <input
                 type="text"
+                value={zipCode}
+                onChange={(e) => setZipCode(e.target.value.replace(/\D/g, "").slice(0, 5))}
                 placeholder="Zip Code"
                 className="flex-grow px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-secondary focus:outline-none transition-colors"
                 required
+                minLength={5}
               />
               <button type="submit" className="bg-accent text-primary font-bold text-lg px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-md">
                 Next
@@ -72,7 +138,7 @@ export default function SmartVestor() {
           <div>
             <h2 className="text-4xl font-bold mb-6">Get Ready to Talk With Your Pros</h2>
             <p className="text-xl text-blue-100 mb-8">
-              Finding a pro doesn’t have to be intimidating! Once you share your info on the SmartVestor Pro request form, your pros will start reaching out to you. This interview guide can help you be ready. It comes with:
+              Finding a pro doesn't have to be intimidating! Once you share your info on the SmartVestor Pro request form, your pros will start reaching out to you. This interview guide can help you be ready. It comes with:
             </p>
             <ul className="space-y-4 mb-8 text-lg font-medium">
               <li className="flex items-center"><span className="w-2 h-2 bg-accent rounded-full mr-3"></span>Questions to ask the pros</li>

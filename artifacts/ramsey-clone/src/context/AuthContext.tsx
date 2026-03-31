@@ -48,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signup = (newUser: User) => {
     setUser(newUser);
     localStorage.setItem("ramsey_user", JSON.stringify(newUser));
+    localStorage.removeItem("ramsey_onboarding_done");
   };
 
   const logout = () => {
