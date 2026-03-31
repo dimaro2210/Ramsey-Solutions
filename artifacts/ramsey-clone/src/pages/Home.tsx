@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom";
-import { useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
 type HeroCard = { title: string; href: string; icon: string; external?: boolean };
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
   const heroCards: HeroCard[] = [
     { title: "Get Out of Debt", href: "/debt/debt-101", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-get-out-debt-2x.png" },
     { title: "Buy/Sell Real Estate", href: "/real-estate/residential-real-estate", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-real-estate-2x.png" },
@@ -136,17 +138,18 @@ export default function Home() {
           <p className="text-sm md:text-base text-white/80 mb-6 md:mb-8 max-w-md mx-auto">
             Get AI-powered money advice built on the same principles you trust from The Ramsey Show.
           </p>
-          <div className="max-w-lg mx-auto relative">
+          <form className="max-w-lg mx-auto relative" onSubmit={(e) => { e.preventDefault(); if (searchQuery.trim()) navigate(`/askramsey?q=${encodeURIComponent(searchQuery.trim())}`); }}>
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="How do I start getting out of d..."
               className="w-full py-3 px-5 pr-14 rounded-full bg-white text-gray-800 text-base placeholder:text-gray-400 outline-none border-2 border-transparent focus:border-[#0073B9]"
-              readOnly
             />
-            <button className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-[#0073B9]">
+            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-[#0073B9]">
               <ChevronRight className="w-6 h-6" />
             </button>
-          </div>
+          </form>
         </div>
       </section>
 

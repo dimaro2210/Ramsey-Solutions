@@ -1,201 +1,211 @@
-import { useState, useRef, useEffect } from "react";
-import { Send, User, Bot, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Search, ArrowLeft, ChevronRight, BookOpen } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
+interface SearchResult {
+  id: string;
+  topic: string;
+  question: string;
+  answer: string;
+  link?: string;
+  linkLabel?: string;
+  category: string;
 }
 
-const SUGGESTED_QUESTIONS = [
-  "How do I start getting out of debt?",
+const POPULAR_TOPICS = [
+  "How do I get out of debt?",
   "What are the 7 Baby Steps?",
-  "Should I invest or pay off debt first?",
-  "How much should I save for an emergency fund?",
-  "Is it okay to use credit cards for rewards?",
-  "How do I create a budget that works?",
+  "How do I create a budget?",
+  "How should I start investing?",
+  "What insurance do I need?",
+  "Should I use credit cards?",
 ];
 
 export default function AskRamsey() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialQuery = searchParams.get("q") || "";
+  const [query, setQuery] = useState(initialQuery);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [hasSearched, setHasSearched] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const askQuestion = async (question: string) => {
-    if (!question.trim() || loading) return;
-
-    const userMessage: Message = { role: "user", content: question.trim() };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
+  const doSearch = async (q: string) => {
+    if (!q.trim()) return;
     setLoading(true);
+    setHasSearched(true);
+    setSearchParams({ q: q.trim() });
 
     try {
       const apiBase = import.meta.env.BASE_URL.replace(/\/$/, "");
-      const res = await fetch(`${apiBase}/api/askramsey`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question: question.trim(),
-          history: messages,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to get response");
-
+      const res = await fetch(
+        `${apiBase}/api/askramsey?q=${encodeURIComponent(q.trim())}`
+      );
+      if (!res.ok) throw new Error("Search failed");
       const data = await res.json();
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: data.answer },
-      ]);
+      setResults(data.results);
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
-        },
-      ]);
+      setResults([]);
     } finally {
       setLoading(false);
-      inputRef.current?.focus();
     }
   };
 
+  useEffect(() => {
+    if (initialQuery) {
+      doSearch(initialQuery);
+    }
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    askQuestion(input);
+    doSearch(query);
+  };
+
+  const handleTopicClick = (topic: string) => {
+    setQuery(topic);
+    doSearch(topic);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#001934] to-[#003561] flex flex-col">
-      <div className="bg-[#001934] border-b border-white/10 px-4 py-3">
-        <div className="max-w-3xl mx-auto flex items-center gap-3">
-          <Link
-            to="/"
-            className="text-white/70 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
-          <div>
-            <h1 className="text-white font-bold text-lg">
-              Ask Ramsey, Get Advice
-            </h1>
-            <p className="text-white/60 text-xs">
-              AI-powered money advice built on Ramsey principles
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-3xl mx-auto space-y-4">
-          {messages.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-[#FCD214] rounded-full flex items-center justify-center mx-auto mb-6">
-                <Bot className="w-8 h-8 text-[#003561]" />
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">
-                What can I help you with?
-              </h2>
-              <p className="text-white/60 mb-8 max-w-md mx-auto">
-                Ask me anything about money, budgeting, debt, investing, or
-                financial planning.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
-                {SUGGESTED_QUESTIONS.map((q) => (
-                  <button
-                    key={q}
-                    onClick={() => askQuestion(q)}
-                    className="text-left px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white/90 text-sm transition-colors border border-white/10"
-                  >
-                    {q}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+    <div className="min-h-screen bg-gradient-to-b from-[#001934] to-[#003561]">
+      <div className="bg-[#001934]/80 backdrop-blur-sm sticky top-0 z-10 border-b border-white/10">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-3 mb-4">
+            <Link
+              to="/"
+              className="text-white/70 hover:text-white transition-colors"
             >
-              {msg.role === "assistant" && (
-                <div className="w-8 h-8 rounded-full bg-[#FCD214] flex items-center justify-center flex-shrink-0 mt-1">
-                  <Bot className="w-4 h-4 text-[#003561]" />
-                </div>
-              )}
-              <div
-                className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                  msg.role === "user"
-                    ? "bg-[#0073B9] text-white"
-                    : "bg-white/10 text-white/90"
-                }`}
-              >
-                <p className="text-sm whitespace-pre-wrap leading-relaxed">
-                  {msg.content}
-                </p>
-              </div>
-              {msg.role === "user" && (
-                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-1">
-                  <User className="w-4 h-4 text-white" />
-                </div>
-              )}
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div>
+              <h1 className="text-white font-bold text-xl">
+                Ask Ramsey, Get Advice
+              </h1>
+              <p className="text-white/50 text-xs">
+                Search for money advice built on Ramsey principles
+              </p>
             </div>
-          ))}
+          </div>
 
-          {loading && (
-            <div className="flex gap-3 justify-start">
-              <div className="w-8 h-8 rounded-full bg-[#FCD214] flex items-center justify-center flex-shrink-0 mt-1">
-                <Bot className="w-4 h-4 text-[#003561]" />
-              </div>
-              <div className="bg-white/10 rounded-2xl px-4 py-3">
-                <div className="flex gap-1.5">
-                  <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce [animation-delay:0ms]"></div>
-                  <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce [animation-delay:150ms]"></div>
-                  <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce [animation-delay:300ms]"></div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
+          <form onSubmit={handleSubmit} className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search for money advice..."
+              className="w-full py-3 pl-12 pr-14 rounded-full bg-white text-gray-800 text-base placeholder:text-gray-400 outline-none border-2 border-transparent focus:border-[#0073B9]"
+            />
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#0073B9] hover:bg-[#005a94] text-white flex items-center justify-center transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </form>
         </div>
       </div>
 
-      <div className="bg-[#001934] border-t border-white/10 px-4 py-4">
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-3xl mx-auto flex gap-2"
-        >
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask a money question..."
-            className="flex-1 py-3 px-5 rounded-full bg-white text-gray-800 text-base placeholder:text-gray-400 outline-none border-2 border-transparent focus:border-[#0073B9]"
-            disabled={loading}
-          />
-          <button
-            type="submit"
-            disabled={!input.trim() || loading}
-            className="w-12 h-12 rounded-full bg-[#0073B9] hover:bg-[#005a94] text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
-          >
-            <Send className="w-5 h-5" />
-          </button>
-        </form>
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {!hasSearched && (
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-[#FCD214] rounded-full flex items-center justify-center mx-auto mb-6">
+              <BookOpen className="w-8 h-8 text-[#003561]" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">
+              What can we help you with?
+            </h2>
+            <p className="text-white/60 mb-8 max-w-md mx-auto">
+              Search for advice on debt, budgeting, investing, insurance, and
+              more — all based on Ramsey's proven principles.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
+              {POPULAR_TOPICS.map((topic) => (
+                <button
+                  key={topic}
+                  onClick={() => handleTopicClick(topic)}
+                  className="text-left px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white/90 text-sm transition-colors border border-white/10"
+                >
+                  {topic}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {loading && (
+          <div className="flex justify-center py-16">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 bg-[#FCD214] rounded-full animate-bounce [animation-delay:0ms]"></div>
+              <div className="w-3 h-3 bg-[#FCD214] rounded-full animate-bounce [animation-delay:150ms]"></div>
+              <div className="w-3 h-3 bg-[#FCD214] rounded-full animate-bounce [animation-delay:300ms]"></div>
+            </div>
+          </div>
+        )}
+
+        {hasSearched && !loading && results.length === 0 && (
+          <div className="text-center py-16">
+            <p className="text-white/70 text-lg mb-2">
+              No results found for "{searchParams.get("q")}"
+            </p>
+            <p className="text-white/50 text-sm mb-6">
+              Try searching for topics like "debt", "budget", "investing", or
+              "insurance"
+            </p>
+            <button
+              onClick={() => {
+                setQuery("");
+                setHasSearched(false);
+                setSearchParams({});
+                inputRef.current?.focus();
+              }}
+              className="text-[#FCD214] hover:text-[#FCD214]/80 text-sm font-medium transition-colors"
+            >
+              Clear search
+            </button>
+          </div>
+        )}
+
+        {hasSearched && !loading && results.length > 0 && (
+          <div className="space-y-6">
+            <p className="text-white/50 text-sm">
+              {results.length} result{results.length !== 1 ? "s" : ""} for "
+              {searchParams.get("q")}"
+            </p>
+            {results.map((result) => (
+              <div
+                key={result.id}
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10"
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <span className="inline-block px-3 py-1 bg-[#0073B9]/30 text-[#6EC1E4] text-xs font-medium rounded-full">
+                    {result.category}
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {result.topic}
+                </h3>
+                <p className="text-white/50 text-sm mb-4 italic">
+                  {result.question}
+                </p>
+                <div className="text-white/80 text-sm leading-relaxed whitespace-pre-line mb-4">
+                  {result.answer}
+                </div>
+                {result.link && (
+                  <Link
+                    to={result.link}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0073B9] hover:bg-[#005a94] text-white text-sm font-semibold rounded-full transition-colors"
+                  >
+                    {result.linkLabel || "Learn More"}
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
