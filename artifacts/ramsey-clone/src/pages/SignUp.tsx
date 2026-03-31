@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/context/AuthContext";
 import { TrendingUp } from "lucide-react";
+import OnboardingModal from "@/components/OnboardingModal";
 
 const signUpSchema = z
   .object({
@@ -29,6 +31,8 @@ type SignUpForm = z.infer<typeof signUpSchema>;
 export default function SignUp() {
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
   const form = useForm<SignUpForm>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -48,6 +52,12 @@ export default function SignUp() {
     navigate("/dashboard");
   };
 
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+    setOnboardingComplete(true);
+    localStorage.setItem("ramsey_onboarding_done", "true");
+  };
+
   const inputClass =
     "w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-[#0073B9] focus:outline-none transition-colors";
   const labelClass = "block text-sm font-bold text-[#003561] mb-1";
@@ -55,6 +65,8 @@ export default function SignUp() {
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      {showOnboarding && <OnboardingModal onClose={handleCloseOnboarding} />}
+
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-border p-8">
         <div className="flex justify-center mb-4">
           <div className="flex items-center gap-2">

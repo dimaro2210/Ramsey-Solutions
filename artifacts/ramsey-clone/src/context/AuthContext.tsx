@@ -6,6 +6,7 @@ interface User {
   email: string;
   phone: string;
   accountType: string;
+  profilePicture?: string;
 }
 
 interface AuthContextType {
@@ -13,6 +14,7 @@ interface AuthContextType {
   login: (email: string, password: string) => boolean;
   signup: (user: User) => void;
   logout: () => void;
+  updateUser: (updates: Partial<User>) => void;
   isAuthenticated: boolean;
 }
 
@@ -51,6 +53,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("ramsey_onboarding_done");
   };
 
+  const updateUser = (updates: Partial<User>) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...updates };
+      localStorage.setItem("ramsey_user", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem("ramsey_user");
@@ -58,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, signup, logout, isAuthenticated: !!user }}
+      value={{ user, login, signup, logout, updateUser, isAuthenticated: !!user }}
     >
       {children}
     </AuthContext.Provider>

@@ -149,18 +149,6 @@ export default function Deposit() {
                 className="w-full pl-10 pr-4 py-4 bg-gray-50 rounded-xl border border-gray-200 text-2xl font-mono text-[#003561] placeholder:text-gray-300 outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all"
               />
             </div>
-            <div className="flex gap-2 mt-3">
-              {[100, 500, 1000, 5000, 10000].map((v) => (
-                <button
-                  key={v}
-                  type="button"
-                  onClick={() => setAmount(v.toString())}
-                  className="px-3 py-2 bg-gray-50 hover:bg-[#0073B9]/5 hover:text-[#0073B9] border border-gray-200 rounded-lg text-sm font-medium transition-colors text-gray-600"
-                >
-                  ${v.toLocaleString()}
-                </button>
-              ))}
-            </div>
             {method === "card" && parseFloat(amount || "0") > 0 && (
               <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm">
                 <div className="flex justify-between text-gray-500">

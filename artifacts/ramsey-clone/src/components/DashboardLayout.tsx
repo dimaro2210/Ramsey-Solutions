@@ -12,6 +12,7 @@ import {
   X,
   TrendingUp,
   User,
+  UserCog,
 } from "lucide-react";
 
 const sidebarLinks = [
@@ -19,6 +20,7 @@ const sidebarLinks = [
   { label: "Deposit", href: "/dashboard/deposit", icon: ArrowDownToLine },
   { label: "Withdraw", href: "/dashboard/withdraw", icon: ArrowUpFromLine },
   { label: "Trading History", href: "/dashboard/history", icon: History },
+  { label: "Profile", href: "/dashboard/profile", icon: UserCog },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -117,9 +119,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               </p>
               <p className="text-xs text-gray-500">{user?.email}</p>
             </div>
-            <div className="w-9 h-9 rounded-full bg-[#003561] flex items-center justify-center">
-              <User className="w-5 h-5 text-white" />
-            </div>
+            <Link to="/dashboard/profile" className="w-9 h-9 rounded-full bg-[#003561] flex items-center justify-center overflow-hidden">
+              {user?.profilePicture ? (
+                <img src={user.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <User className="w-5 h-5 text-white" />
+              )}
+            </Link>
           </div>
         </header>
 

@@ -97,23 +97,33 @@ Utility scripts package. Each script is a `.ts` file in `src/` with a correspond
 
 ### `artifacts/ramsey-clone` (`@workspace/ramsey-clone`)
 
-Full clone of ramseysolutions.com built with React + Vite + Tailwind CSS v4. Uses wouter for routing and framer-motion for animations.
+Full clone of ramseysolutions.com built with React + Vite + Tailwind CSS v4. Uses react-router-dom for routing and framer-motion for animations.
 
 - **Brand colors**: Primary #003561 (dark blue), Secondary #0073B9 (link blue), Accent #FCD214 (CTA yellow)
 - **CDN images**: All images load directly from `cdn.ramseysolutions.net` (no local copies)
-- **Pages (13 total)**:
+- **Auth**: `AuthContext` with localStorage persistence (`ramsey_user` key). Demo login accepts any email/password. Supports `updateUser()` for profile updates and profile picture storage via base64 data URLs.
+- **Pages (19 total)**:
   - `/` — Homepage with 8 sections (hero cards, Ask Ramsey, stats, Baby Steps carousel, quiz, Small Steps, Trusted Pros, Testimonials)
-  - `/sign-in` — Sign In form
-  - `/sign-up` — Sign Up form with validation
+  - `/sign-in` — Sign In form redirecting to dashboard
+  - `/sign-up` — Sign Up form with onboarding modal (4-slide "Get Started" popup explaining expert-managed trading)
+  - `/askramsey` — Ask Ramsey search results (GET `/api/askramsey?q=`)
   - `/debt/debt-101` — Debt 101 guide
   - `/real-estate/residential-real-estate` — Real Estate page
-  - `/money/everydollar` — EveryDollar budgeting app page with phone mockup
+  - `/money/everydollar` — EveryDollar budgeting app page
   - `/taxes` — Tax filing page
-  - `/retirement/smartvestor` — SmartVestor investing page
+  - `/retirement/smartvestor` — SmartVestor page; ZIP code search shows modal promoting Ramsey Invest sign-up
   - `/insurance` — Insurance types with Coverage Checkup CTA
   - `/shows` — Shows hub page
   - `/shows/the-ramsey-show` — The Ramsey Show page
   - `/dave-ramsey-7-baby-steps` — 7 Baby Steps page
   - `/trusted` — RamseyTrusted pros page
+  - `/dashboard` — Investment dashboard overview with live crypto/stock prices (CoinGecko API), portfolio chart, allocation pie chart, quick actions, recent activity, market news
+  - `/dashboard/deposit` — Multi-step deposit flow (Bank ACH / Credit Card / Crypto) with method → amount → details → review → confirmation
+  - `/dashboard/withdraw` — Multi-step withdrawal flow (Bank / Crypto) with method → amount → details → review → OTP verification → confirmation
+  - `/dashboard/history` — Trading history table with buy/sell and crypto/stock filters
+  - `/dashboard/support` — Contact support with phone, email, live chat cards and message form
+  - `/dashboard/profile` — User profile with editable name/phone, profile picture upload, password change, account info
+- **Dashboard theme**: Ramsey brand blues (#003561 sidebar, white cards, #f0f4f8 bg) — matches website branding
+- **Live prices**: CoinGecko API for crypto (10s refresh), Yahoo Finance API for stocks (30s refresh, with simulated fallback)
 - **Layout**: Sticky header with Ramsey logo, search, nav with dropdowns, mobile menu. Dark blue footer with link columns and social icons.
-- **Dependencies**: wouter, framer-motion, lucide-react, react-hook-form, zod, @tanstack/react-query
+- **Dependencies**: react-router-dom, framer-motion, lucide-react, react-hook-form, zod, @tanstack/react-query
