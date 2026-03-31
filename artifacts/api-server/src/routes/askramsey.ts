@@ -178,6 +178,36 @@ const knowledgeBase: KnowledgeEntry[] = [
     answer: "Ramsey Solutions offers many bestselling books and products:\n\n• The Total Money Makeover — Dave's classic guide to the Baby Steps. Over 5 million copies sold.\n• Baby Steps Millionaires — How ordinary people built extraordinary wealth following the Baby Steps.\n• Financial Peace Revisited — An updated look at building financial peace.\n• The Legacy Journey — For those on Baby Steps 4–7 who want to build wealth and leave a legacy.\n• Smart Money Smart Kids — By Dave Ramsey and Rachel Cruze, teaching kids about money.\n\nYou can find all books, planners, journals, and gift sets at the Ramsey Solutions store.",
     linkLabel: "Shop the Store",
     category: "Products"
+  },
+  {
+    id: "crypto-trading",
+    topic: "Crypto Trading",
+    keywords: ["crypto", "cryptocurrency", "bitcoin", "ethereum", "solana", "btc", "eth", "blockchain", "defi", "web3", "altcoin", "token", "nft", "mining", "wallet", "exchange"],
+    question: "How do I start trading crypto?",
+    answer: "Ramsey Invest makes crypto trading simple and accessible. Here's how to get started:\n\n1. Create a trading account — sign up with your personal details and select 'Individual Trading' as your account type.\n2. Deposit funds — use bank transfer (free) or credit card (instant) to fund your account.\n3. Start trading — buy and sell popular cryptocurrencies like Bitcoin (BTC), Ethereum (ETH), Solana (SOL), and more.\n\nKey tips for crypto investing:\n• Only invest money you can afford to lose — crypto is volatile.\n• Start small and learn the market before making large trades.\n• Diversify across multiple cryptocurrencies.\n• Use dollar-cost averaging — invest a fixed amount regularly.\n• Keep long-term goals in mind rather than chasing short-term gains.\n\nSign up for a Ramsey Invest account to access real-time crypto prices, portfolio tracking, and trading tools.",
+    link: "/sign-up",
+    linkLabel: "Open a Trading Account",
+    category: "Investing"
+  },
+  {
+    id: "stock-trading",
+    topic: "Stock Trading",
+    keywords: ["stock", "stocks", "shares", "equity", "market", "nasdaq", "s&p", "dow jones", "dividend", "etf", "index fund", "trade", "trading", "broker", "brokerage", "portfolio"],
+    question: "How do I start trading stocks?",
+    answer: "Ramsey Invest gives you access to trade stocks from top companies like Apple, Microsoft, NVIDIA, Tesla, and more. Here's how to begin:\n\n1. Open a trading account — it's free and takes just minutes.\n2. Fund your account — deposit via bank transfer or card.\n3. Research and trade — browse stock prices, analyze trends, and make informed trades.\n\nStock investing fundamentals:\n• Invest for the long term — time in the market beats timing the market.\n• Diversify your portfolio across different sectors and industries.\n• Focus on quality companies with strong fundamentals.\n• Reinvest dividends to accelerate your growth.\n• Stay consistent — regular investing through market ups and downs builds wealth.\n\nYour Ramsey Invest dashboard shows real-time stock prices, portfolio performance, and complete trading history.",
+    link: "/sign-up",
+    linkLabel: "Start Trading Stocks",
+    category: "Investing"
+  },
+  {
+    id: "trading-dashboard",
+    topic: "Trading Dashboard",
+    keywords: ["dashboard", "portfolio", "account", "balance", "deposit", "withdraw", "history", "trading", "performance", "chart", "overview"],
+    question: "How do I use the trading dashboard?",
+    answer: "Your Ramsey Invest dashboard is your command center for managing investments. Here's what you'll find:\n\n• Overview — See your total balance, crypto holdings, stock holdings, and available cash at a glance. Live price tickers show real-time market movements.\n• Portfolio Chart — Track your portfolio performance over time (1D, 1W, 1M, 3M, 1Y views).\n• Deposit — Add funds to your account via bank transfer, credit/debit card, or crypto transfer.\n• Withdraw — Transfer funds out to your bank account or crypto wallet.\n• Trading History — View all your past buy and sell transactions with filters by type and asset class.\n• Contact Support — Reach our team by phone, email, or live chat for any questions.\n\nSign in to access your personalized dashboard with real-time data.",
+    link: "/sign-in",
+    linkLabel: "Sign In to Dashboard",
+    category: "Investing"
   }
 ];
 

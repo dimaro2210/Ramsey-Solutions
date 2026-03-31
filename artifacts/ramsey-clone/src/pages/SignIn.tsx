@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/AuthContext";
+import { TrendingUp } from "lucide-react";
 
 const signInSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -12,74 +13,98 @@ const signInSchema = z.object({
 type SignInForm = z.infer<typeof signInSchema>;
 
 export default function SignIn() {
-  const { toast } = useToast();
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const form = useForm<SignInForm>({
     resolver: zodResolver(signInSchema),
-    defaultValues: { email: "", password: "" }
+    defaultValues: { email: "", password: "" },
   });
 
   const onSubmit = (data: SignInForm) => {
-    console.log(data);
-    toast({
-      title: "Signed In",
-      description: "Welcome back! (Mock login)",
-    });
+    login(data.email, data.password);
+    navigate("/dashboard");
   };
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-border p-8">
-        <div className="flex justify-center mb-8">
-          <img
-            className="h-12 w-auto"
-            src="https://cdn.ramseysolutions.net/media/rscom/logos/flat-blue-50-ramsey-logo.svg"
-            alt="Ramsey Solutions"
-          />
+        <div className="flex justify-center mb-6">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-[#003561] rounded-xl flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-[#FCD214]" />
+            </div>
+            <div>
+              <span className="font-bold text-lg text-[#003561]">
+                Ramsey Invest
+              </span>
+              <p className="text-[10px] text-gray-500 -mt-0.5">
+                Crypto & Stock Trading
+              </p>
+            </div>
+          </div>
         </div>
-        
-        <h2 className="text-3xl font-bold text-center text-primary mb-8">Sign In</h2>
-        
+
+        <h2 className="text-3xl font-bold text-center text-[#003561] mb-2">
+          Sign In
+        </h2>
+        <p className="text-center text-gray-500 text-sm mb-8">
+          Access your trading dashboard
+        </p>
+
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label className="block text-sm font-bold text-primary mb-2">Email Address</label>
+            <label className="block text-sm font-bold text-[#003561] mb-2">
+              Email Address
+            </label>
             <input
               {...form.register("email")}
-              className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-[#0073B9] focus:outline-none transition-colors"
               placeholder="you@example.com"
             />
             {form.formState.errors.email && (
-              <p className="text-destructive text-sm mt-1">{form.formState.errors.email.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {form.formState.errors.email.message}
+              </p>
             )}
           </div>
-          
+
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label className="block text-sm font-bold text-primary">Password</label>
-              <Link to="/sign-in" className="text-sm font-semibold text-secondary hover:underline">Forgot password?</Link>
+              <label className="block text-sm font-bold text-[#003561]">
+                Password
+              </label>
+              <span className="text-sm font-semibold text-[#0073B9] cursor-pointer hover:underline">
+                Forgot password?
+              </span>
             </div>
             <input
               type="password"
               {...form.register("password")}
-              className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-[#0073B9] focus:outline-none transition-colors"
               placeholder="••••••••"
             />
             {form.formState.errors.password && (
-              <p className="text-destructive text-sm mt-1">{form.formState.errors.password.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {form.formState.errors.password.message}
+              </p>
             )}
           </div>
 
           <button
             type="submit"
-            className="w-full bg-accent text-primary font-bold text-lg py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-md"
+            className="w-full bg-[#FCD214] text-[#003561] font-bold text-lg py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-md"
           >
             Sign In
           </button>
         </form>
 
         <div className="mt-8 text-center">
-          <p className="text-muted-foreground font-medium">
+          <p className="text-gray-500 font-medium">
             Don't have an account?{" "}
-            <Link to="/sign-up" className="text-secondary font-bold hover:underline">
+            <Link
+              to="/sign-up"
+              className="text-[#0073B9] font-bold hover:underline"
+            >
               Sign Up
             </Link>
           </p>
