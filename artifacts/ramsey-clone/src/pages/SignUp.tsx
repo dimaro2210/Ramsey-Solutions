@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/context/AuthContext";
-import { TrendingUp } from "lucide-react";
+
 import OnboardingModal from "@/components/OnboardingModal";
 
 const signUpSchema = z
@@ -69,19 +69,13 @@ export default function SignUp() {
 
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-border p-8">
         <div className="flex justify-center mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-[#003561] rounded-xl flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-[#FCD214]" />
-            </div>
-            <div>
-              <span className="font-bold text-lg text-[#003561]">
-                Ramsey Invest
-              </span>
-              <p className="text-[10px] text-gray-500 -mt-0.5">
-                Crypto & Stock Trading
-              </p>
-            </div>
-          </div>
+          <Link to="/" className="w-12 h-12 block overflow-hidden">
+            <img
+              src="https://cdn.ramseysolutions.net/media/rscom/logos/flat-blue-50-ramsey-logo.svg"
+              alt="Ramsey"
+              className="h-12 w-auto max-w-none"
+            />
+          </Link>
         </div>
 
         <h2 className="text-2xl font-bold text-center text-[#003561] mb-2">

@@ -10,7 +10,7 @@ import {
   LogOut,
   Menu,
   X,
-  TrendingUp,
+
   User,
   UserCog,
 } from "lucide-react";
@@ -42,11 +42,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         }`}
       >
         <div className="p-5 border-b border-white/10">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#FCD214] rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-[#003561]" />
-            </div>
-            <span className="font-bold text-lg text-white">Ramsey Invest</span>
+          <Link to="/" className="w-10 h-10 block overflow-hidden">
+            <img
+              src="https://cdn.ramseysolutions.net/media/rscom/logos/flat-blue-50-ramsey-logo.svg"
+              alt="Ramsey"
+              className="h-10 w-auto max-w-none brightness-0 invert"
+            />
           </Link>
         </div>
 

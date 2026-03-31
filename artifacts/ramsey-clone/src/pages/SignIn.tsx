@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/context/AuthContext";
-import { TrendingUp } from "lucide-react";
+
 
 const signInSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -29,19 +29,13 @@ export default function SignIn() {
     <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-border p-8">
         <div className="flex justify-center mb-6">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-[#003561] rounded-xl flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-[#FCD214]" />
-            </div>
-            <div>
-              <span className="font-bold text-lg text-[#003561]">
-                Ramsey Invest
-              </span>
-              <p className="text-[10px] text-gray-500 -mt-0.5">
-                Crypto & Stock Trading
-              </p>
-            </div>
-          </div>
+          <Link to="/" className="w-12 h-12 block overflow-hidden">
+            <img
+              src="https://cdn.ramseysolutions.net/media/rscom/logos/flat-blue-50-ramsey-logo.svg"
+              alt="Ramsey"
+              className="h-12 w-auto max-w-none"
+            />
+          </Link>
         </div>
 
         <h2 className="text-3xl font-bold text-center text-[#003561] mb-2">
