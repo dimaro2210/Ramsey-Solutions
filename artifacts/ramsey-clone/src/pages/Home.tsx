@@ -105,27 +105,24 @@ export default function Home() {
         <style>{`
           .ask-ramsey-section {
             background:
-              url('/hero/personalities-positioned.png') 68% top / 280% auto no-repeat,
-              url('/hero/bg-gradient.png') bottom center / contain repeat-x,
-              url('/hero/bg-buckets-mobile.jpg') top center / 115% no-repeat,
-              linear-gradient(#003561, #003561);
+              url('/hero/personalities-and-bottom-gradient-02.png') top center / 175% auto no-repeat,
+              url('/hero/mobile-gradient.png') top center / cover no-repeat,
+              linear-gradient(#001934, #001934);
           }
           @media (min-width: 600px) {
             .ask-ramsey-section {
               background:
-                url('/hero/personalities-positioned.png') 65% top / 160% auto no-repeat,
-                url('/hero/bg-gradient.png') bottom center / contain repeat-x,
-                url('/hero/bg-personalities-desktop-tablet-v2.jpg') top center / cover no-repeat,
-                linear-gradient(#003561, #003561);
+                url('/hero/personalities-and-bottom-gradient-02.png') top center / 130% auto no-repeat,
+                url('/hero/desktop-gradient.png') top center / cover no-repeat,
+                linear-gradient(#001934, #001934);
             }
           }
           @media (min-width: 1200px) {
             .ask-ramsey-section {
               background:
-                url('/hero/personalities-positioned.png') 60% top / 1440px auto no-repeat,
-                url('/hero/bg-gradient.png') bottom center / contain repeat-x,
-                url('/hero/bg-personalities-desktop-large-v2.jpg') top center / cover no-repeat,
-                linear-gradient(#003561, #003561);
+                url('/hero/personalities-and-bottom-gradient-02.png') top center / 1440px auto no-repeat,
+                url('/hero/desktop-gradient.png') top center / cover no-repeat,
+                linear-gradient(#001934, #001934);
             }
           }
         `}</style>

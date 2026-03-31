@@ -19,6 +19,7 @@ import Shows from "@/pages/Shows";
 import TheRamseyShow from "@/pages/TheRamseyShow";
 import SevenBabySteps from "@/pages/SevenBabySteps";
 import Trusted from "@/pages/Trusted";
+import AskRamsey from "@/pages/AskRamsey";
 
 const queryClient = new QueryClient();
 
@@ -27,25 +28,26 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/sign-in" element={<SignIn />} />
-              <Route path="/sign-up" element={<SignUp />} />
-              <Route path="/debt/debt-101" element={<Debt101 />} />
-              <Route path="/real-estate/residential-real-estate" element={<RealEstate />} />
-              <Route path="/money/everydollar" element={<EveryDollar />} />
-              <Route path="/taxes" element={<Taxes />} />
-              <Route path="/retirement/smartvestor" element={<SmartVestor />} />
-              <Route path="/insurance" element={<Insurance />} />
-              <Route path="/insurance/:type" element={<InsuranceType />} />
-              <Route path="/shows" element={<Shows />} />
-              <Route path="/shows/the-ramsey-show" element={<TheRamseyShow />} />
-              <Route path="/dave-ramsey-7-baby-steps" element={<SevenBabySteps />} />
-              <Route path="/trusted" element={<Trusted />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
+          <Routes>
+            <Route path="/askramsey" element={<AskRamsey />} />
+            <Route element={<Layout><></></Layout>}>
+              <Route path="/" element={<Layout><Home /></Layout>} />
+              <Route path="/sign-in" element={<Layout><SignIn /></Layout>} />
+              <Route path="/sign-up" element={<Layout><SignUp /></Layout>} />
+              <Route path="/debt/debt-101" element={<Layout><Debt101 /></Layout>} />
+              <Route path="/real-estate/residential-real-estate" element={<Layout><RealEstate /></Layout>} />
+              <Route path="/money/everydollar" element={<Layout><EveryDollar /></Layout>} />
+              <Route path="/taxes" element={<Layout><Taxes /></Layout>} />
+              <Route path="/retirement/smartvestor" element={<Layout><SmartVestor /></Layout>} />
+              <Route path="/insurance" element={<Layout><Insurance /></Layout>} />
+              <Route path="/insurance/:type" element={<Layout><InsuranceType /></Layout>} />
+              <Route path="/shows" element={<Layout><Shows /></Layout>} />
+              <Route path="/shows/the-ramsey-show" element={<Layout><TheRamseyShow /></Layout>} />
+              <Route path="/dave-ramsey-7-baby-steps" element={<Layout><SevenBabySteps /></Layout>} />
+              <Route path="/trusted" element={<Layout><Trusted /></Layout>} />
+              <Route path="*" element={<Layout><NotFound /></Layout>} />
+            </Route>
+          </Routes>
         </BrowserRouter>
         <Toaster />
       </TooltipProvider>
