@@ -51,6 +51,7 @@ export default function SignIn() {
               Email Address
             </label>
             <input
+              autoComplete="username"
               {...form.register("email")}
               className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-[#0073B9] focus:outline-none transition-colors"
               placeholder="you@example.com"
@@ -73,6 +74,7 @@ export default function SignIn() {
             </div>
             <input
               type="password"
+              autoComplete="current-password"
               {...form.register("password")}
               className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-[#0073B9] focus:outline-none transition-colors"
               placeholder="••••••••"

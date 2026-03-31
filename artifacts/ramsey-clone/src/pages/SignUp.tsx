@@ -160,6 +160,7 @@ export default function SignUp() {
             <label className={labelClass}>Password</label>
             <input
               type="password"
+              autoComplete="new-password"
               {...form.register("password")}
               className={inputClass}
               placeholder="Min. 8 characters"
@@ -173,6 +174,7 @@ export default function SignUp() {
             <label className={labelClass}>Confirm Password</label>
             <input
               type="password"
+              autoComplete="new-password"
               {...form.register("confirmPassword")}
               className={inputClass}
               placeholder="Re-enter password"

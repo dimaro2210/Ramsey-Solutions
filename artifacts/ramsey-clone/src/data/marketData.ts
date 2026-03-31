@@ -53,7 +53,6 @@ const CRYPTO_NAMES: Record<string, string> = {
   XRP: "Ripple", ADA: "Cardano", DOGE: "Dogecoin", DOT: "Polkadot",
 };
 
-const STOCK_SYMBOLS = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "JPM"];
 const STOCK_NAMES: Record<string, string> = {
   AAPL: "Apple Inc.", MSFT: "Microsoft", GOOGL: "Alphabet", AMZN: "Amazon",
   TSLA: "Tesla", NVDA: "NVIDIA", META: "Meta", JPM: "JPMorgan",
@@ -63,9 +62,7 @@ const STOCK_ICONS: Record<string, string> = {
 };
 
 let cachedCrypto: Asset[] | null = null;
-let cachedStocks: Asset[] | null = null;
 let lastCryptoFetch = 0;
-let lastStockFetch = 0;
 
 const FALLBACK_CRYPTO: Asset[] = [
   { symbol: "BTC", name: "Bitcoin", price: 67432.18, change: 1243.50, changePercent: 1.88, icon: "₿", type: "crypto" },
@@ -78,7 +75,7 @@ const FALLBACK_CRYPTO: Asset[] = [
   { symbol: "DOT", name: "Polkadot", price: 7.82, change: -0.15, changePercent: -1.88, icon: "●", type: "crypto" },
 ];
 
-const FALLBACK_STOCKS: Asset[] = [
+const BASE_STOCKS: Asset[] = [
   { symbol: "AAPL", name: "Apple Inc.", price: 189.84, change: 2.34, changePercent: 1.25, icon: "", type: "stock" },
   { symbol: "MSFT", name: "Microsoft", price: 422.56, change: 5.67, changePercent: 1.36, icon: "⊞", type: "stock" },
   { symbol: "GOOGL", name: "Alphabet", price: 175.23, change: -1.45, changePercent: -0.82, icon: "G", type: "stock" },
@@ -130,41 +127,9 @@ export async function fetchLiveCrypto(): Promise<Asset[]> {
   }
 }
 
-export async function fetchLiveStocks(): Promise<Asset[]> {
-  const now = Date.now();
-  if (cachedStocks && now - lastStockFetch < 30000) return cachedStocks;
-
-  try {
-    const res = await fetch(
-      `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${STOCK_SYMBOLS.join(",")}&fields=regularMarketPrice,regularMarketChange,regularMarketChangePercent`
-    );
-    if (!res.ok) throw new Error("Yahoo Finance API error");
-    const data = await res.json();
-    const quotes = data?.quoteResponse?.result;
-    if (!quotes || !quotes.length) throw new Error("No stock data");
-
-    const assets: Asset[] = quotes.map((q: any) => ({
-      symbol: q.symbol,
-      name: STOCK_NAMES[q.symbol] || q.shortName || q.symbol,
-      price: Math.round((q.regularMarketPrice || 0) * 100) / 100,
-      change: Math.round((q.regularMarketChange || 0) * 100) / 100,
-      changePercent: Math.round((q.regularMarketChangePercent || 0) * 100) / 100,
-      icon: STOCK_ICONS[q.symbol] || q.symbol[0],
-      type: "stock" as const,
-    }));
-
-    cachedStocks = assets;
-    lastStockFetch = now;
-    return assets;
-  } catch {
-    if (cachedStocks) return cachedStocks;
-    return simulateStockPrices();
-  }
-}
-
-function simulateStockPrices(): Asset[] {
-  return FALLBACK_STOCKS.map((s) => {
-    const variance = s.price * 0.005;
+export function fetchLiveStocks(): Asset[] {
+  return BASE_STOCKS.map((s) => {
+    const variance = s.price * 0.003;
     const randomChange = (Math.random() - 0.5) * 2 * variance;
     const newPrice = Math.round((s.price + randomChange) * 100) / 100;
     const change = Math.round(randomChange * 100) / 100;
