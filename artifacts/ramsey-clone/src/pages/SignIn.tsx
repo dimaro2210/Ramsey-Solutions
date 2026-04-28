@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,9 +21,16 @@ export default function SignIn() {
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (data: SignInForm) => {
-    login(data.email, data.password);
-    navigate("/dashboard");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const onSubmit = async (data: SignInForm) => {
+    setErrorMsg("");
+    const result = await login(data.email, data.password);
+    if (result.success) {
+      navigate("/dashboard");
+    } else {
+      setErrorMsg(result.error || "Login failed");
+    }
   };
 
   return (
@@ -38,7 +46,7 @@ export default function SignIn() {
           </Link>
         </div>
 
-        <h2 className="text-3xl font-bold text-center text-[#003561] mb-2">
+        <h2 className="text-3xl font-bold text-center text-[#0073B9] mb-2">
           Sign In
         </h2>
         <p className="text-center text-gray-500 text-sm mb-8">
@@ -46,8 +54,13 @@ export default function SignIn() {
         </p>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {errorMsg && (
+            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium border border-red-100">
+              {errorMsg}
+            </div>
+          )}
           <div>
-            <label className="block text-sm font-bold text-[#003561] mb-2">
+            <label className="block text-sm font-bold text-[#0073B9] mb-2">
               Email Address
             </label>
             <input
@@ -65,7 +78,7 @@ export default function SignIn() {
 
           <div>
             <div className="flex justify-between items-center mb-2">
-              <label className="block text-sm font-bold text-[#003561]">
+              <label className="block text-sm font-bold text-[#0073B9]">
                 Password
               </label>
               <span className="text-sm font-semibold text-[#0073B9] cursor-pointer hover:underline">
@@ -88,7 +101,7 @@ export default function SignIn() {
 
           <button
             type="submit"
-            className="w-full bg-[#FCD214] text-[#003561] font-bold text-lg py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-md"
+            className="w-full bg-[#FCD214] text-[#0073B9] font-bold text-lg py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-md"
           >
             Sign In
           </button>
@@ -109,3 +122,4 @@ export default function SignIn() {
     </div>
   );
 }
+

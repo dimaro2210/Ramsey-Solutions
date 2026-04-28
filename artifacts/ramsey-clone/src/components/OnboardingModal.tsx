@@ -1,34 +1,20 @@
 import { useState } from "react";
-import { X, TrendingUp, Shield, Users, BarChart3, ChevronRight, CheckCircle2 } from "lucide-react";
+import { X, TrendingUp, Shield, Users, BarChart3, ChevronRight, CheckCircle2, Mail } from "lucide-react";
 
 const slides = [
   {
     icon: TrendingUp,
     iconBg: "bg-[#0073B9]",
-    title: "Welcome to Ramsey Invest",
-    subtitle: "Your money, growing smarter every day",
-    body: "Join thousands of people who have transformed their financial future through smart investing. Our platform has helped investors grow their portfolios by an average of 12% annually — and you don't need any trading experience to get started.",
+    title: "Ramsey Stock Trading",
+    subtitle: "Your journey to financial freedom starts here",
+    body: "Welcome to Ramsey Trading. We provide global market access to the world's most profitable companies, helping you build lasting wealth through proven stock market positions.",
   },
   {
     icon: Users,
-    iconBg: "bg-[#003561]",
-    title: "Managed by Experts",
-    subtitle: "You don't need to be a trading expert",
-    body: "Our team of certified financial advisors and SmartVestor Pros manages your investments using proven strategies built on Ramsey principles. Just deposit your funds, sit back, and watch your money grow. We handle all the research, analysis, and trading for you.",
-  },
-  {
-    icon: Shield,
-    iconBg: "bg-green-600",
-    title: "Safe & Trusted",
-    subtitle: "Your investments are protected",
-    body: "Your account is secured with bank-level encryption and SIPC protection up to $500,000. We follow strict compliance standards and never take unnecessary risks with your money. Over 50,000 investors trust Ramsey Invest with their financial future.",
-  },
-  {
-    icon: BarChart3,
-    iconBg: "bg-[#FCD214] text-[#003561]",
-    title: "Ready to Start?",
-    subtitle: "Your dashboard is all set up",
-    body: "Explore your personalized dashboard with real-time crypto and stock prices, deposit funds to start investing, and track your portfolio growth over time. The proven Ramsey approach to wealth building starts right here.",
+    iconBg: "bg-[#0073B9]",
+    title: "Expert Management",
+    subtitle: "You don't need to be a professional trader",
+    body: "Our team of certified financial experts handles all the research, analysis, and trade execution for you. Sit back and watch your portfolio grow as we manage your investments according to Ramsey principles.",
   },
 ];
 
@@ -49,7 +35,7 @@ export default function OnboardingModal({ onClose }: { onClose: () => void }) {
           <X className="w-4 h-4 text-gray-500" />
         </button>
 
-        <div className="bg-gradient-to-br from-[#003561] to-[#0073B9] p-8 pb-12 text-center">
+        <div className="bg-gradient-to-br from-[#0073B9] to-[#0073B9] p-8 pb-12 text-center">
           <div className={`w-16 h-16 ${current.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
             <Icon className="w-8 h-8 text-white" />
           </div>
@@ -110,3 +96,4 @@ export default function OnboardingModal({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
+

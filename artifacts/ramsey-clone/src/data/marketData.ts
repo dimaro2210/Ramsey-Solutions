@@ -76,14 +76,17 @@ const FALLBACK_CRYPTO: Asset[] = [
 ];
 
 const BASE_STOCKS: Asset[] = [
-  { symbol: "AAPL", name: "Apple Inc.", price: 189.84, change: 2.34, changePercent: 1.25, icon: "", type: "stock" },
-  { symbol: "MSFT", name: "Microsoft", price: 422.56, change: 5.67, changePercent: 1.36, icon: "⊞", type: "stock" },
-  { symbol: "GOOGL", name: "Alphabet", price: 175.23, change: -1.45, changePercent: -0.82, icon: "G", type: "stock" },
-  { symbol: "AMZN", name: "Amazon", price: 185.67, change: 3.21, changePercent: 1.76, icon: "a", type: "stock" },
-  { symbol: "TSLA", name: "Tesla", price: 248.92, change: -8.43, changePercent: -3.28, icon: "T", type: "stock" },
-  { symbol: "NVDA", name: "NVIDIA", price: 875.28, change: 22.15, changePercent: 2.60, icon: "N", type: "stock" },
-  { symbol: "META", name: "Meta", price: 502.14, change: 7.89, changePercent: 1.60, icon: "M", type: "stock" },
-  { symbol: "JPM", name: "JPMorgan", price: 198.45, change: 1.23, changePercent: 0.62, icon: "J", type: "stock" },
+  { symbol: "AAPL", name: "Apple Inc.", price: 189.84, change: 2.34, changePercent: 1.25, icon: "https://www.google.com/s2/favicons?domain=apple.com&sz=128", type: "stock" },
+  { symbol: "MSFT", name: "Microsoft", price: 422.56, change: 5.67, changePercent: 1.36, icon: "https://www.google.com/s2/favicons?domain=microsoft.com&sz=128", type: "stock" },
+  { symbol: "GOOGL", name: "Alphabet", price: 175.23, change: -1.45, changePercent: -0.82, icon: "https://www.google.com/s2/favicons?domain=google.com&sz=128", type: "stock" },
+  { symbol: "AMZN", name: "Amazon", price: 185.67, change: 3.21, changePercent: 1.76, icon: "https://www.google.com/s2/favicons?domain=amazon.com&sz=128", type: "stock" },
+  { symbol: "TSLA", name: "Tesla", price: 248.92, change: -8.43, changePercent: -3.28, icon: "https://www.google.com/s2/favicons?domain=tesla.com&sz=128", type: "stock" },
+  { symbol: "NVDA", name: "NVIDIA", price: 875.28, change: 22.15, changePercent: 2.60, icon: "https://www.google.com/s2/favicons?domain=nvidia.com&sz=128", type: "stock" },
+  { symbol: "META", name: "Meta", price: 502.14, change: 7.89, changePercent: 1.60, icon: "https://www.google.com/s2/favicons?domain=meta.com&sz=128", type: "stock" },
+  { symbol: "JPM", name: "JPMorgan", price: 198.45, change: 1.23, changePercent: 0.62, icon: "https://www.google.com/s2/favicons?domain=jpmorgan.com&sz=128", type: "stock" },
+  { symbol: "NFLX", name: "Netflix", price: 620.12, change: 8.45, changePercent: 1.38, icon: "https://www.google.com/s2/favicons?domain=netflix.com&sz=128", type: "stock" },
+  { symbol: "AMD", name: "AMD", price: 180.45, change: 4.23, changePercent: 2.40, icon: "https://www.google.com/s2/favicons?domain=amd.com&sz=128", type: "stock" },
+  { symbol: "DIS", name: "Disney", price: 112.34, change: -0.45, changePercent: -0.40, icon: "https://www.google.com/s2/favicons?domain=disney.com&sz=128", type: "stock" },
 ];
 
 export async function fetchLiveCrypto(): Promise<Asset[]> {
@@ -127,7 +130,46 @@ export async function fetchLiveCrypto(): Promise<Asset[]> {
   }
 }
 
-export function fetchLiveStocks(): Asset[] {
+export interface NewsItem {
+  id: string;
+  title: string;
+  source: string;
+  timestamp: number;
+  url: string;
+}
+
+export async function fetchMarketNews(): Promise<NewsItem[]> {
+  try {
+    const rssUrl = encodeURIComponent('https://feeds.finance.yahoo.com/rss/2.0/headline?s=AAPL,MSFT,TSLA,NVDA,AMZN,META,GOOGL');
+    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`);
+    const data = await res.json();
+    
+    if (data.status === 'ok' && data.items) {
+      return data.items.slice(0, 6).map((item: any) => ({
+        id: item.guid || Math.random().toString(),
+        title: item.title,
+        source: 'Yahoo Finance',
+        timestamp: new Date(item.pubDate).getTime(),
+        url: item.link
+      }));
+    }
+    throw new Error("News feed unavailable");
+  } catch (error) {
+    console.error("News fetch error:", error);
+    // Fallback news
+    return [
+      { id: '1', title: "NVDA beats earnings expectations across all sectors", source: "MarketWatch", timestamp: Date.now() - 5 * 60000, url: "#" },
+      { id: '2', title: "S&P 500 hits new all-time high amid tech rally", source: "Bloomberg", timestamp: Date.now() - 12 * 60000, url: "#" },
+      { id: '3', title: "Fed holds rates steady at 5.25%, hints at future cuts", source: "Reuters", timestamp: Date.now() - 60 * 60000, url: "#" },
+      { id: '4', title: "Apple announces new AI integration in upcoming iOS", source: "TechCrunch", timestamp: Date.now() - 120 * 60000, url: "#" },
+      { id: '5', title: "Tesla shares surge following delivery numbers beat", source: "CNBC", timestamp: Date.now() - 180 * 60000, url: "#" },
+      { id: '6', title: "Bitcoin stabilizes as institutional adoption grows", source: "CoinDesk", timestamp: Date.now() - 240 * 60000, url: "#" }
+    ];
+  }
+}
+
+// Internal mock logic as fallback
+export function mockLiveStocks(): Asset[] {
   return BASE_STOCKS.map((s) => {
     const variance = s.price * 0.003;
     const randomChange = (Math.random() - 0.5) * 2 * variance;
@@ -136,6 +178,51 @@ export function fetchLiveStocks(): Asset[] {
     const changePercent = Math.round((change / s.price) * 10000) / 100;
     return { ...s, price: newPrice, change, changePercent };
   });
+}
+
+let cachedStocks: Asset[] | null = null;
+let lastStocksFetch = 0;
+
+export async function fetchLiveStocks(): Promise<Asset[]> {
+  const now = Date.now();
+  if (cachedStocks && now - lastStocksFetch < 30000) {
+    return cachedStocks; // Return cached if less than 30 seconds old
+  }
+
+  try {
+    const symbols = BASE_STOCKS.map(s => s.symbol).join(',');
+    const yahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols}`;
+    
+    // Using corsproxy.io instead of allorigins
+    const res = await fetch(`https://corsproxy.io/?url=${encodeURIComponent(yahooUrl)}`);
+    
+    if (!res.ok) throw new Error("Yahoo fetch failed");
+    
+    const data = await res.json();
+    // corsproxy returns the actual json, no need to parse data.contents
+    const quotes = data.quoteResponse?.result || [];
+
+    const assets: Asset[] = BASE_STOCKS.map(base => {
+      const quote = quotes.find((q: any) => q.symbol === base.symbol);
+      if (quote) {
+        return {
+          ...base,
+          price: quote.regularMarketPrice || base.price,
+          change: quote.regularMarketChange || 0,
+          changePercent: quote.regularMarketChangePercent || 0,
+        };
+      }
+      return base;
+    });
+
+    cachedStocks = assets;
+    lastStocksFetch = now;
+    return assets;
+  } catch (error) {
+    console.error("Stock fetch error:", error);
+    if (cachedStocks) return cachedStocks;
+    return mockLiveStocks();
+  }
 }
 
 export function generateChartData(points: number = 24) {

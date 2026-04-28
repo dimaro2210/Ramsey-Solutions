@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/context/AuthContext";
-
 import OnboardingModal from "@/components/OnboardingModal";
 
 const signUpSchema = z
@@ -15,8 +15,6 @@ const signUpSchema = z
     phone: z.string().min(10, "Please enter a valid phone number"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
-    accountType: z.string().min(1, "Please select an account type"),
-    experience: z.string().min(1, "Please select your experience level"),
     agreeTerms: z.literal(true, {
       errorMap: () => ({ message: "You must agree to the terms" }),
     }),
@@ -31,37 +29,65 @@ type SignUpForm = z.infer<typeof signUpSchema>;
 export default function SignUp() {
   const { signup } = useAuth();
   const navigate = useNavigate();
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [onboardingComplete, setOnboardingComplete] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const form = useForm<SignUpForm>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      accountType: "",
-      experience: "",
-    },
+    defaultValues: {},
   });
 
-  const onSubmit = (data: SignUpForm) => {
-    signup({
+  const onSubmit = async (data: SignUpForm) => {
+    setErrorMsg("");
+    const result = await signup({
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
       phone: data.phone,
-      accountType: data.accountType,
-    });
-    navigate("/dashboard");
+      accountType: "Individual Trading",
+    }, data.password);
+
+    if (result.success) {
+      setShowOnboarding(true);
+    } else {
+      setErrorMsg(result.error || "Sign up failed. Please try again.");
+    }
   };
 
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);
     setOnboardingComplete(true);
     localStorage.setItem("ramsey_onboarding_done", "true");
+    setShowConfirmation(true);
   };
 
   const inputClass =
     "w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-[#0073B9] focus:outline-none transition-colors";
-  const labelClass = "block text-sm font-bold text-[#003561] mb-1";
+  const labelClass = "block text-sm font-bold text-[#0073B9] mb-1";
   const errorClass = "text-red-500 text-xs mt-1";
+
+  if (showConfirmation) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-border p-10 text-center">
+          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Mail className="w-10 h-10 text-[#0073B9]" />
+          </div>
+          <h2 className="text-3xl font-black text-[#0073B9] mb-4">Check Your Email</h2>
+          <p className="text-gray-500 mb-8 leading-relaxed">
+            We've sent a verification link to your Gmail. Please check your inbox (and spam folder) and click the link to activate your trading account.
+          </p>
+          <button
+            onClick={() => navigate("/sign-in")}
+            className="w-full bg-[#0073B9] text-white font-bold text-lg py-4 rounded-xl hover:bg-blue-700 transition-colors shadow-md"
+          >
+            Go Back to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
@@ -78,14 +104,19 @@ export default function SignUp() {
           </Link>
         </div>
 
-        <h2 className="text-2xl font-bold text-center text-[#003561] mb-2">
+        <h2 className="text-2xl font-bold text-center text-[#0073B9] mb-2">
           Create Your Trading Account
         </h2>
         <p className="text-center text-gray-500 text-sm mb-6">
-          Start investing in crypto and stocks today
+          Start investing in stocks today
         </p>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {errorMsg && (
+            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium border border-red-100">
+              {errorMsg}
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={labelClass}>First Name</label>
@@ -127,34 +158,7 @@ export default function SignUp() {
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className={labelClass}>Account Type</label>
-              <select {...form.register("accountType")} className={inputClass}>
-                <option value="">Select type</option>
-                <option value="Individual Trading">Individual Trading</option>
-                <option value="Joint Account">Joint Account</option>
-                <option value="Retirement (IRA)">Retirement (IRA)</option>
-                <option value="Corporate">Corporate</option>
-              </select>
-              {form.formState.errors.accountType && (
-                <p className={errorClass}>{form.formState.errors.accountType.message}</p>
-              )}
-            </div>
-            <div>
-              <label className={labelClass}>Experience Level</label>
-              <select {...form.register("experience")} className={inputClass}>
-                <option value="">Select level</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-                <option value="professional">Professional</option>
-              </select>
-              {form.formState.errors.experience && (
-                <p className={errorClass}>{form.formState.errors.experience.message}</p>
-              )}
-            </div>
-          </div>
+
 
           <div>
             <label className={labelClass}>Password</label>
@@ -215,7 +219,7 @@ export default function SignUp() {
 
           <button
             type="submit"
-            className="w-full bg-[#FCD214] text-[#003561] font-bold text-lg py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-md mt-2"
+            className="w-full bg-[#FCD214] text-[#0073B9] font-bold text-lg py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-md mt-2"
           >
             Create Trading Account
           </button>
@@ -236,3 +240,4 @@ export default function SignUp() {
     </div>
   );
 }
+

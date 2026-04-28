@@ -23,14 +23,15 @@ import Trusted from "@/pages/Trusted";
 import AskRamsey from "@/pages/AskRamsey";
 
 import DashboardLayout from "@/components/DashboardLayout";
-import Overview from "@/pages/dashboard/Overview";
-import Deposit from "@/pages/dashboard/Deposit";
+import Overview from "./pages/dashboard/Overview";
+import LiveTrading from "./pages/dashboard/LiveTrading";
+import Deposit from "./pages/dashboard/Deposit";
 import Withdraw from "@/pages/dashboard/Withdraw";
 import TradingHistory from "@/pages/dashboard/TradingHistory";
-import Support from "@/pages/dashboard/Support";
 import Profile from "@/pages/dashboard/Profile";
-import Settings from "@/pages/dashboard/Settings";
+
 import Notifications from "@/pages/dashboard/Notifications";
+import AdminControlPanel from "@/pages/admin/AdminControlPanel";
 import { ReactNode } from "react";
 
 const queryClient = new QueryClient();
@@ -45,14 +46,15 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/askramsey" element={<AskRamsey />} />
+      <Route path="/admin" element={<AdminControlPanel />} />
 
       <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><Overview /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/dashboard/live-trading" element={<ProtectedRoute><DashboardLayout><LiveTrading /></DashboardLayout></ProtectedRoute>} />
       <Route path="/dashboard/deposit" element={<ProtectedRoute><DashboardLayout><Deposit /></DashboardLayout></ProtectedRoute>} />
       <Route path="/dashboard/withdraw" element={<ProtectedRoute><DashboardLayout><Withdraw /></DashboardLayout></ProtectedRoute>} />
       <Route path="/dashboard/history" element={<ProtectedRoute><DashboardLayout><TradingHistory /></DashboardLayout></ProtectedRoute>} />
-      <Route path="/dashboard/support" element={<ProtectedRoute><DashboardLayout><Support /></DashboardLayout></ProtectedRoute>} />
       <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardLayout><Profile /></DashboardLayout></ProtectedRoute>} />
-      <Route path="/dashboard/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/dashboard/settings" element={<Navigate to="/dashboard/profile" replace />} />
       <Route path="/dashboard/notifications" element={<ProtectedRoute><DashboardLayout><Notifications /></DashboardLayout></ProtectedRoute>} />
 
       <Route path="/" element={<Layout><Home /></Layout>} />

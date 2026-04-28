@@ -45,14 +45,14 @@
   --background: 195 14% 96%; /* #F5F7F8 Light Gray */
   --foreground: 197 10% 14%; /* #1F2426 Dark Text */
   
-  --primary: 207 100% 19%; /* #003561 Dark Blue */
+  --primary: 207 100% 19%; /* #0073B9 Dark Blue */
   --primary-foreground: 0 0% 100%; /* #FFFFFF */
   
   --secondary: 203 100% 36%; /* #0073B9 Link Blue */
   --secondary-foreground: 0 0% 100%; /* #FFFFFF */
   
   --accent: 49 97% 53%; /* #FCD214 CTA Yellow */
-  --accent-foreground: 207 100% 19%; /* #003561 Dark Blue */
+  --accent-foreground: 207 100% 19%; /* #0073B9 Dark Blue */
   
   --destructive: 4 78% 58%; /* #E64B40 Alert Red */
   --destructive-foreground: 0 0% 100%;
@@ -107,3 +107,15 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+

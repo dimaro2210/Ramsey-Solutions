@@ -52,14 +52,14 @@ export default function Home() {
             .hero-section {
               background:
                 url('/hero/bg-personalities-desktop-tablet-v2.jpg') top center / cover no-repeat,
-                linear-gradient(#003561, #003561);
+                linear-gradient(#0073B9, #0073B9);
             }
           }
           @media (min-width: 1200px) {
             .hero-section {
               background:
                 url('/hero/bg-personalities-desktop-large-v2.jpg') top center / cover no-repeat,
-                linear-gradient(#003561, #003561);
+                linear-gradient(#0073B9, #0073B9);
             }
           }
         `}</style>
@@ -131,7 +131,7 @@ export default function Home() {
 
         <div className="min-h-[200px] sm:min-h-[280px] md:min-h-[350px] lg:min-h-[450px]"></div>
 
-        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 pt-8 pb-12 md:pb-16" style={{ background: 'linear-gradient(to bottom, transparent, #003561 20%)' }}>
+        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 pt-8 pb-12 md:pb-16" style={{ background: 'linear-gradient(to bottom, transparent, #0073B9 20%)' }}>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-3 md:mb-4 text-white">
             Ask Ramsey,<br/>Get Advice
           </h2>
@@ -335,3 +335,4 @@ function TestimonialCarousel({ testimonials }: { testimonials: { name: string; q
     </section>
   );
 }
+

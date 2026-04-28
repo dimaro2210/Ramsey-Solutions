@@ -68,7 +68,7 @@ export default function AskRamsey() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#001934] to-[#003561]">
+    <div className="min-h-screen bg-gradient-to-b from-[#001934] to-[#0073B9]">
       <div className="bg-[#001934]/80 backdrop-blur-sm sticky top-0 z-10 border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3 mb-4">
@@ -112,7 +112,7 @@ export default function AskRamsey() {
         {!hasSearched && (
           <div className="text-center py-8">
             <div className="w-16 h-16 bg-[#FCD214] rounded-full flex items-center justify-center mx-auto mb-6">
-              <BookOpen className="w-8 h-8 text-[#003561]" />
+              <BookOpen className="w-8 h-8 text-[#0073B9]" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">
               What can we help you with?
@@ -210,3 +210,4 @@ export default function AskRamsey() {
     </div>
   );
 }
+

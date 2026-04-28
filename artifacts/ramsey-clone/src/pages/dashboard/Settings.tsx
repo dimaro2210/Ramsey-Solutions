@@ -90,7 +90,7 @@ export default function Settings() {
   return (
     <motion.div initial="initial" animate="animate" variants={stagger} className="max-w-4xl mx-auto pb-8">
       <motion.div {...fadeUp} className="mb-6">
-        <h1 className="text-2xl font-bold text-[#003561]">Settings</h1>
+        <h1 className="text-2xl font-bold text-[#0073B9]">Settings</h1>
         <p className="text-gray-500 text-sm mt-1">Manage your account preferences and security</p>
       </motion.div>
 
@@ -102,7 +102,7 @@ export default function Settings() {
                 <Shield className="w-4 h-4 text-red-500" />
               </div>
               <div>
-                <h3 className="font-semibold text-[#003561]">Password & Security</h3>
+                <h3 className="font-semibold text-[#0073B9]">Password & Security</h3>
                 <p className="text-xs text-gray-400">Update your password</p>
               </div>
             </div>
@@ -116,7 +116,7 @@ export default function Settings() {
                     type={showCurrentPw ? "text" : "password"}
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
-                    className="w-full pl-11 pr-12 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#003561] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
+                    className="w-full pl-11 pr-12 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#0073B9] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
                     placeholder="Enter current password"
                     autoComplete="current-password"
                   />
@@ -134,7 +134,7 @@ export default function Settings() {
                     type={showNewPw ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full pl-11 pr-12 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#003561] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
+                    className="w-full pl-11 pr-12 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#0073B9] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
                     placeholder="Min. 8 characters"
                     autoComplete="new-password"
                   />
@@ -164,7 +164,7 @@ export default function Settings() {
                     type={showConfirmPw ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full pl-11 pr-12 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#003561] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
+                    className="w-full pl-11 pr-12 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#0073B9] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
                     placeholder="Re-enter new password"
                     autoComplete="new-password"
                   />
@@ -187,7 +187,7 @@ export default function Settings() {
               <button
                 type="submit"
                 disabled={!currentPassword || !newPassword || !confirmPassword}
-                className="w-full py-3 bg-[#003561] hover:bg-[#002040] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-medium transition-all duration-200 text-sm"
+                className="w-full py-3 bg-[#0073B9] hover:bg-[#002040] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-medium transition-all duration-200 text-sm"
               >
                 Update Password
               </button>
@@ -206,7 +206,7 @@ export default function Settings() {
                 <Smartphone className="w-5 h-5 text-[#0073B9]" />
               </div>
               <div>
-                <h4 className="font-semibold text-[#003561] text-sm">Two-Factor Authentication</h4>
+                <h4 className="font-semibold text-[#0073B9] text-sm">Two-Factor Authentication</h4>
                 <p className="text-xs text-gray-500 mt-1 leading-relaxed">Add an extra layer of security to your account. We recommend enabling 2FA for enhanced protection of your investment portfolio.</p>
                 <button type="button" className="mt-3 px-4 py-2 bg-[#0073B9] hover:bg-[#005a94] text-white rounded-lg text-xs font-medium transition-colors">
                   Enable 2FA
@@ -222,7 +222,7 @@ export default function Settings() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center">
                 <Bell className="w-4 h-4 text-[#0073B9]" />
               </div>
-              <h3 className="font-semibold text-[#003561]">Notification Preferences</h3>
+              <h3 className="font-semibold text-[#0073B9]">Notification Preferences</h3>
             </div>
             <div className="p-6 space-y-0 divide-y divide-gray-100">
               {[
@@ -234,7 +234,7 @@ export default function Settings() {
               ].map((item) => (
                 <div key={item.label} className="flex items-center justify-between py-3.5 first:pt-0 last:pb-0">
                   <div>
-                    <p className="text-sm font-medium text-[#003561]">{item.label}</p>
+                    <p className="text-sm font-medium text-[#0073B9]">{item.label}</p>
                     <p className="text-xs text-gray-400 mt-0.5">{item.desc}</p>
                   </div>
                   <button
@@ -254,14 +254,14 @@ export default function Settings() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center">
                 <Globe className="w-4 h-4 text-purple-500" />
               </div>
-              <h3 className="font-semibold text-[#003561]">Preferences</h3>
+              <h3 className="font-semibold text-[#0073B9]">Preferences</h3>
             </div>
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {darkMode ? <Moon className="w-4 h-4 text-gray-400" /> : <Sun className="w-4 h-4 text-yellow-500" />}
                   <div>
-                    <p className="text-sm font-medium text-[#003561]">Dark Mode</p>
+                    <p className="text-sm font-medium text-[#0073B9]">Dark Mode</p>
                     <p className="text-xs text-gray-400">Switch appearance</p>
                   </div>
                 </div>
@@ -279,7 +279,7 @@ export default function Settings() {
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#003561] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#0073B9] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
                 >
                   <option value="USD">USD - US Dollar</option>
                   <option value="EUR">EUR - Euro</option>
@@ -293,7 +293,7 @@ export default function Settings() {
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#003561] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#0073B9] outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all text-sm"
                 >
                   <option value="en">English</option>
                   <option value="es">Spanish</option>
@@ -309,20 +309,20 @@ export default function Settings() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center">
                 <CreditCard className="w-4 h-4 text-gray-500" />
               </div>
-              <h3 className="font-semibold text-[#003561]">Account</h3>
+              <h3 className="font-semibold text-[#0073B9]">Account</h3>
             </div>
             <div className="p-6 space-y-0 divide-y divide-gray-100">
               <button type="button" className="flex items-center justify-between w-full py-3 first:pt-0 group">
                 <div className="flex items-center gap-3">
                   <CreditCard className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-[#003561]">Payment Methods</span>
+                  <span className="text-sm text-[#0073B9]">Payment Methods</span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
               </button>
               <button type="button" className="flex items-center justify-between w-full py-3 group">
                 <div className="flex items-center gap-3">
                   <Shield className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-[#003561]">Privacy Policy</span>
+                  <span className="text-sm text-[#0073B9]">Privacy Policy</span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
               </button>
@@ -347,3 +347,4 @@ export default function Settings() {
     </motion.div>
   );
 }
+

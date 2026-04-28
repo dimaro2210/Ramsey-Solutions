@@ -11,7 +11,7 @@ export default function SevenBabySteps() {
 
   return (
     <div className="w-full">
-      <section className="bg-gradient-to-br from-[#003561] to-[#005a9c] py-20 text-center px-4 text-white">
+      <section className="bg-gradient-to-br from-[#0073B9] to-[#005a9c] py-20 text-center px-4 text-white">
         <div className="max-w-3xl mx-auto">
           <img src="https://cdn.ramseysolutions.net/media/landing-pages/7-baby-steps/7-baby-steps-h1-palm.svg" alt="The 7 Baby Steps" className="h-20 md:h-28 mx-auto mb-8 invert brightness-0" />
           <p className="text-xl md:text-2xl font-medium mb-10 text-blue-100">
@@ -42,3 +42,4 @@ export default function SevenBabySteps() {
     </div>
   );
 }
+

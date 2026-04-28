@@ -1,72 +1,108 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   ArrowDownToLine,
-  CreditCard,
-  Building2,
   Wallet,
   CheckCircle2,
   ChevronRight,
   ArrowLeft,
   Copy,
   Shield,
-  Clock,
+  UploadCloud,
+  Loader2
 } from "lucide-react";
+import { db } from "@/lib/db";
+import { useAuth } from "@/context/AuthContext";
 
-type Step = "method" | "amount" | "details" | "review" | "success";
+type Step = "amount" | "asset" | "payment" | "success";
 
 const inputClass =
-  "w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#003561] placeholder:text-gray-400 outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all";
+  "w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 text-[#002d72] placeholder:text-gray-400 outline-none focus:border-[#002d72] focus:ring-2 focus:ring-[#002d72]/10 transition-all";
 
 export default function Deposit() {
-  const [step, setStep] = useState<Step>("method");
-  const [method, setMethod] = useState("");
+  const { user } = useAuth();
+  const [step, setStep] = useState<Step>("amount");
   const [amount, setAmount] = useState("");
-  const [bankDetails, setBankDetails] = useState({ holderName: "", accountNumber: "", routingNumber: "", bankName: "" });
-  const [cardDetails, setCardDetails] = useState({ cardNumber: "", expiry: "", cvv: "", nameOnCard: "", billingZip: "" });
-  const [cryptoDetails, setCryptoDetails] = useState({ network: "bitcoin", walletNote: "" });
+  const [asset, setAsset] = useState<"bitcoin" | "ethereum" | null>(null);
+  const [receipt, setReceipt] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [referenceId, setReferenceId] = useState("");
+  const [adminSettings, setAdminSettings] = useState({ depositAddresses: { bitcoin: '', ethereum: '' } });
 
-  const methods = [
-    { id: "bank", label: "Bank Transfer (ACH)", icon: Building2, desc: "1-3 business days", fee: "No fees", color: "text-[#003561]" },
-    { id: "card", label: "Credit/Debit Card", icon: CreditCard, desc: "Instant deposit", fee: "2.5% processing fee", color: "text-[#0073B9]" },
-    { id: "crypto", label: "Crypto Transfer", icon: Wallet, desc: "10-60 minutes", fee: "Network fee only", color: "text-green-600" },
-  ];
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedMethod = methods.find((m) => m.id === method);
-  const fee = method === "card" ? parseFloat(amount || "0") * 0.025 : 0;
-  const total = parseFloat(amount || "0") + fee;
+  useEffect(() => {
+    const loadSettings = async () => {
+      const settings = await db.getAdminSettings();
+      setAdminSettings(settings);
+    };
+    loadSettings();
+    window.addEventListener('db_updated', loadSettings);
+    return () => window.removeEventListener('db_updated', loadSettings);
+  }, []);
 
   const goBack = () => {
-    const steps: Step[] = ["method", "amount", "details", "review"];
+    const steps: Step[] = ["amount", "asset", "payment"];
     const idx = steps.indexOf(step);
     if (idx > 0) setStep(steps[idx - 1]);
   };
 
-  const canProceedDetails = () => {
-    if (method === "bank") return bankDetails.holderName && bankDetails.accountNumber && bankDetails.routingNumber && bankDetails.bankName;
-    if (method === "card") return cardDetails.cardNumber && cardDetails.expiry && cardDetails.cvv && cardDetails.nameOnCard && cardDetails.billingZip;
-    if (method === "crypto") return cryptoDetails.network;
-    return false;
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setReceipt(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const generateAddress = () => {
+    return asset === "bitcoin" 
+      ? adminSettings.depositAddresses.bitcoin
+      : adminSettings.depositAddresses.ethereum;
+  };
+
+  const handleSubmit = async () => {
+    if (!asset || !receipt || !user?.id) return;
+    setIsProcessing(true);
+
+    const newDeposit = await db.addPendingDeposit(user.id, parseFloat(amount), asset, receipt);
+    if (newDeposit) {
+      setReferenceId(newDeposit.id);
+      setIsProcessing(false);
+      setStep("success");
+    } else {
+      setIsProcessing(false);
+    }
+  };
+
+  const copyAddress = () => {
+    navigator.clipboard.writeText(generateAddress());
+    // Normally add a toast here
   };
 
   if (step === "success") {
     return (
-      <div className="max-w-lg mx-auto mt-12 text-center">
-        <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
-          <CheckCircle2 className="w-10 h-10 text-green-500" />
+      <div className="max-w-lg mx-auto mt-12 text-center animate-in fade-in zoom-in duration-500">
+        <div className="w-20 h-20 bg-[#e6f0ff] rounded-full flex items-center justify-center mx-auto mb-6">
+          <CheckCircle2 className="w-10 h-10 text-[#002d72]" />
         </div>
-        <h2 className="text-2xl font-bold text-[#003561] mb-2">Deposit Successful!</h2>
+        <h2 className="text-2xl font-bold text-[#002d72] mb-2">Deposit Submitted!</h2>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm font-medium mb-6">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Pending Verification
+        </div>
         <p className="text-gray-500 mb-2">
-          Your deposit of <span className="text-[#003561] font-semibold">${parseFloat(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> via{" "}
-          {selectedMethod?.label} has been submitted.
+          Your deposit of <span className="text-[#002d72] font-semibold">${parseFloat(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> via{" "}
+          <span className="capitalize">{asset}</span> is under review.
         </p>
-        {method === "bank" && <p className="text-gray-400 text-sm mb-2">Funds will be available in 1-3 business days.</p>}
-        {method === "card" && <p className="text-gray-400 text-sm mb-2">Funds are available immediately in your account.</p>}
-        {method === "crypto" && <p className="text-gray-400 text-sm mb-2">Funds will be credited after network confirmation (10-60 min).</p>}
-        <p className="text-xs text-gray-400 mb-8">Transaction ID: DEP-{Date.now().toString(36).toUpperCase()}</p>
+        <p className="text-gray-400 text-sm mb-6">Funds will be credited once the transaction and receipt are verified.</p>
+        <p className="text-xs text-gray-400 mb-8 font-mono bg-gray-50 py-2 rounded-lg">Ref ID: {referenceId}</p>
         <div className="flex gap-3 justify-center">
           <button
-            onClick={() => { setStep("method"); setMethod(""); setAmount(""); }}
-            className="px-6 py-3 bg-[#0073B9] hover:bg-[#005a94] text-white rounded-xl font-medium transition-colors"
+            onClick={() => { setStep("amount"); setAmount(""); setAsset(null); setReceipt(null); }}
+            className="px-6 py-3 bg-[#002d72] hover:bg-[#001d4a] text-white rounded-xl font-medium transition-colors"
           >
             Make Another Deposit
           </button>
@@ -78,303 +114,181 @@ export default function Deposit() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6 flex items-center gap-3">
-        {step !== "method" && (
-          <button onClick={goBack} className="text-gray-400 hover:text-[#003561] transition-colors">
+        {step !== "amount" && (
+          <button onClick={goBack} className="text-gray-400 hover:text-[#002d72] transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </button>
         )}
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-3 text-[#003561]">
-            <ArrowDownToLine className="w-7 h-7 text-green-500" />
+          <h1 className="text-2xl font-bold flex items-center gap-3 text-[#002d72]">
+            <ArrowDownToLine className="w-7 h-7 text-[#002d72]" />
             Deposit Funds
           </h1>
           <p className="text-gray-500 text-sm mt-1">
-            {step === "method" && "Choose how you'd like to add funds"}
-            {step === "amount" && "Enter the amount to deposit"}
-            {step === "details" && `Enter your ${selectedMethod?.label} details`}
-            {step === "review" && "Review and confirm your deposit"}
+            {step === "amount" && "Step 1: Enter the amount to deposit"}
+            {step === "asset" && "Step 2: Choose your crypto asset"}
+            {step === "payment" && "Step 3: Make payment and upload receipt"}
           </p>
         </div>
       </div>
 
       <div className="flex gap-2 mb-6">
-        {["method", "amount", "details", "review"].map((s, i) => (
-          <div key={s} className={`h-1.5 flex-1 rounded-full ${
-            ["method", "amount", "details", "review"].indexOf(step) >= i ? "bg-[#0073B9]" : "bg-gray-200"
+        {["amount", "asset", "payment"].map((s, i) => (
+          <div key={s} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
+            ["amount", "asset", "payment"].indexOf(step) >= i ? "bg-[#002d72]" : "bg-gray-200"
           }`} />
         ))}
       </div>
 
-      {step === "method" && (
-        <div className="space-y-3">
-          {methods.map((m) => (
+      <div className="animate-in slide-in-from-right-4 fade-in duration-300">
+        {step === "amount" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+              <label className="block text-sm font-medium text-[#002d72] mb-3">Deposit Amount (USD)</label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-2xl">$</span>
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.00"
+                  min="1"
+                  step="0.01"
+                  className="w-full pl-10 pr-4 py-4 bg-gray-50 rounded-xl border border-gray-200 text-2xl font-mono text-[#002d72] placeholder:text-gray-300 outline-none focus:border-[#002d72] focus:ring-2 focus:ring-[#002d72]/10 transition-all"
+                />
+              </div>
+              <p className="text-xs text-gray-400 mt-3">Enter an amount greater than 0.</p>
+            </div>
             <button
-              key={m.id}
-              onClick={() => { setMethod(m.id); setStep("amount"); }}
-              className={`w-full p-5 rounded-2xl border-2 text-left transition-all flex items-center gap-4 hover:border-[#0073B9] hover:shadow-md bg-white border-gray-200`}
+              onClick={() => setStep("asset")}
+              disabled={!amount || parseFloat(amount) <= 0}
+              className="w-full py-4 bg-[#002d72] hover:bg-[#001d4a] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2"
             >
-              <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center">
-                <m.icon className={`w-6 h-6 ${m.color}`} />
-              </div>
-              <div className="flex-1">
-                <p className="font-semibold text-[#003561]">{m.label}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{m.desc}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs text-green-600 font-medium">{m.fee}</p>
-                <ChevronRight className="w-4 h-4 text-gray-300 mt-1 ml-auto" />
-              </div>
+              Continue <ChevronRight className="w-5 h-5" />
             </button>
-          ))}
-          <div className="flex items-center gap-2 text-xs text-gray-400 mt-4 justify-center">
-            <Shield className="w-4 h-4" />
-            All transactions are encrypted and secure
           </div>
-        </div>
-      )}
+        )}
 
-      {step === "amount" && (
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-            <label className="block text-sm font-medium text-gray-600 mb-3">Deposit Amount (USD)</label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-2xl">$</span>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="0.00"
-                min="10"
-                step="0.01"
-                className="w-full pl-10 pr-4 py-4 bg-gray-50 rounded-xl border border-gray-200 text-2xl font-mono text-[#003561] placeholder:text-gray-300 outline-none focus:border-[#0073B9] focus:ring-2 focus:ring-[#0073B9]/10 transition-all"
-              />
+        {step === "asset" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
+              <h3 className="font-semibold text-[#002d72]">Select Asset</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { id: "bitcoin", label: "Bitcoin (BTC)", icon: "₿" },
+                  { id: "ethereum", label: "Ethereum (ETH)", icon: "Ξ" }
+                ].map((n) => (
+                  <button
+                    key={n.id}
+                    type="button"
+                    onClick={() => setAsset(n.id as any)}
+                    className={`p-5 rounded-xl border-2 text-left transition-all flex items-center gap-4 ${
+                      asset === n.id
+                        ? "border-[#002d72] bg-[#e6f0ff]"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm text-2xl">
+                      {n.icon}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-[#002d72]">{n.label}</p>
+                      <p className="text-xs text-gray-500 capitalize">{n.id} Network</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
-            {method === "card" && parseFloat(amount || "0") > 0 && (
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm">
-                <div className="flex justify-between text-gray-500">
-                  <span>Processing fee (2.5%)</span>
-                  <span>${fee.toFixed(2)}</span>
+            <button
+              onClick={() => setStep("payment")}
+              disabled={!asset}
+              className="w-full py-4 bg-[#002d72] hover:bg-[#001d4a] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2"
+            >
+              Continue <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+
+        {step === "payment" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+              <div className="text-center mb-6">
+                <h3 className="font-semibold text-[#002d72] text-lg">Send {asset === "bitcoin" ? "BTC" : "ETH"}</h3>
+                <p className="text-gray-500 text-sm">Transfer exactly <span className="font-semibold">${amount}</span> worth to the address below.</p>
+              </div>
+
+              <div className="flex justify-center mb-6">
+                <div className="p-4 bg-white border-2 border-gray-100 rounded-2xl shadow-sm">
+                  <img 
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${generateAddress()}`} 
+                    alt="Wallet QR Code"
+                    className="w-48 h-48"
+                  />
                 </div>
-                <div className="flex justify-between font-semibold text-[#003561] mt-1">
-                  <span>You'll be charged</span>
-                  <span>${total.toFixed(2)}</span>
-                </div>
               </div>
-            )}
-            <p className="text-xs text-gray-400 mt-3">Minimum deposit: $10.00</p>
-          </div>
-          <button
-            onClick={() => setStep("details")}
-            disabled={!amount || parseFloat(amount) < 10}
-            className="w-full py-4 bg-[#0073B9] hover:bg-[#005a94] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2"
-          >
-            Continue <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      )}
 
-      {step === "details" && method === "bank" && (
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
-            <h3 className="font-semibold text-[#003561]">Bank Account Information</h3>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1.5">Bank Name</label>
-              <input value={bankDetails.bankName} onChange={(e) => setBankDetails({ ...bankDetails, bankName: e.target.value })} placeholder="e.g. Chase, Bank of America" className={inputClass} />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1.5">Account Holder Name</label>
-              <input value={bankDetails.holderName} onChange={(e) => setBankDetails({ ...bankDetails, holderName: e.target.value })} placeholder="Full name on account" className={inputClass} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-gray-500 mb-1.5">Routing Number</label>
-                <input value={bankDetails.routingNumber} onChange={(e) => setBankDetails({ ...bankDetails, routingNumber: e.target.value })} placeholder="9 digits" maxLength={9} className={inputClass} />
+              <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3 border border-gray-200 mb-6">
+                <code className="text-sm font-mono text-[#002d72] flex-1 break-all">
+                  {generateAddress()}
+                </code>
+                <button onClick={copyAddress} className="p-2 hover:bg-[#e6f0ff] rounded-lg transition-colors text-[#002d72]">
+                  <Copy className="w-5 h-5" />
+                </button>
               </div>
-              <div>
-                <label className="block text-sm text-gray-500 mb-1.5">Account Number</label>
-                <input value={bankDetails.accountNumber} onChange={(e) => setBankDetails({ ...bankDetails, accountNumber: e.target.value })} placeholder="Account number" className={inputClass} />
-              </div>
-            </div>
-            <div className="flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
-              <Shield className="w-4 h-4 text-[#0073B9] mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-gray-500">Your bank details are encrypted with 256-bit SSL and never stored on our servers after verification.</p>
-            </div>
-          </div>
-          <button
-            onClick={() => setStep("review")}
-            disabled={!canProceedDetails()}
-            className="w-full py-4 bg-[#0073B9] hover:bg-[#005a94] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2"
-          >
-            Review Deposit <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      )}
 
-      {step === "details" && method === "card" && (
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
-            <h3 className="font-semibold text-[#003561]">Card Information</h3>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1.5">Name on Card</label>
-              <input value={cardDetails.nameOnCard} onChange={(e) => setCardDetails({ ...cardDetails, nameOnCard: e.target.value })} placeholder="Full name as shown on card" className={inputClass} />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1.5">Card Number</label>
-              <input value={cardDetails.cardNumber} onChange={(e) => setCardDetails({ ...cardDetails, cardNumber: e.target.value })} placeholder="1234 5678 9012 3456" maxLength={19} className={inputClass} />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm text-gray-500 mb-1.5">Expiry</label>
-                <input value={cardDetails.expiry} onChange={(e) => setCardDetails({ ...cardDetails, expiry: e.target.value })} placeholder="MM/YY" maxLength={5} className={inputClass} />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-500 mb-1.5">CVV</label>
-                <input value={cardDetails.cvv} onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value })} placeholder="123" maxLength={4} type="password" className={inputClass} />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-500 mb-1.5">Billing ZIP</label>
-                <input value={cardDetails.billingZip} onChange={(e) => setCardDetails({ ...cardDetails, billingZip: e.target.value })} placeholder="12345" maxLength={5} className={inputClass} />
-              </div>
-            </div>
-            <div className="flex gap-3 items-center pt-2">
-              <img src="https://cdn-icons-png.flaticon.com/512/196/196578.png" alt="Visa" className="h-6" />
-              <img src="https://cdn-icons-png.flaticon.com/512/196/196561.png" alt="Mastercard" className="h-6" />
-              <img src="https://cdn-icons-png.flaticon.com/512/196/196565.png" alt="Amex" className="h-6" />
-            </div>
-          </div>
-          <button
-            onClick={() => setStep("review")}
-            disabled={!canProceedDetails()}
-            className="w-full py-4 bg-[#0073B9] hover:bg-[#005a94] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2"
-          >
-            Review Deposit <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      )}
-
-      {step === "details" && method === "crypto" && (
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-4">
-            <h3 className="font-semibold text-[#003561]">Select Network</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { id: "bitcoin", label: "Bitcoin (BTC)", icon: "₿" },
-                { id: "ethereum", label: "Ethereum (ETH)", icon: "Ξ" },
-                { id: "solana", label: "Solana (SOL)", icon: "◎" },
-                { id: "usdt", label: "USDT (TRC-20)", icon: "$" },
-              ].map((n) => (
-                <button
-                  key={n.id}
-                  type="button"
-                  onClick={() => setCryptoDetails({ ...cryptoDetails, network: n.id })}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${
-                    cryptoDetails.network === n.id
-                      ? "border-[#0073B9] bg-[#0073B9]/5"
-                      : "border-gray-200 hover:border-gray-300"
+              <div className="border-t border-gray-100 pt-6">
+                <h4 className="font-semibold text-[#002d72] mb-3">Upload Payment Receipt</h4>
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+                    receipt ? "border-green-400 bg-green-50" : "border-gray-300 hover:border-[#002d72] hover:bg-gray-50"
                   }`}
                 >
-                  <span className="text-2xl">{n.icon}</span>
-                  <p className="font-medium text-sm text-[#003561] mt-1">{n.label}</p>
-                </button>
-              ))}
-            </div>
-          </div>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    className="hidden" 
+                    accept="image/*,.pdf" 
+                    onChange={handleFileUpload}
+                  />
+                  {receipt ? (
+                    <div className="flex flex-col items-center">
+                      <CheckCircle2 className="w-10 h-10 text-green-500 mb-2" />
+                      <p className="text-green-700 font-medium">Receipt Uploaded Successfully</p>
+                      <p className="text-xs text-green-600 mt-1">Click to change file</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <UploadCloud className="w-10 h-10 text-gray-400 mb-2" />
+                      <p className="text-gray-600 font-medium">Drag & drop or click to upload</p>
+                      <p className="text-xs text-gray-400 mt-1">Supports JPG, PNG, PDF</p>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-            <h3 className="font-semibold text-[#003561] mb-3">Deposit Address</h3>
-            <p className="text-xs text-gray-400 mb-3">Send exactly ${amount} worth of {cryptoDetails.network.toUpperCase()} to this address:</p>
-            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3 border border-gray-200">
-              <code className="text-sm font-mono text-[#003561] flex-1 break-all">
-                {cryptoDetails.network === "bitcoin" && "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"}
-                {cryptoDetails.network === "ethereum" && "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"}
-                {cryptoDetails.network === "solana" && "7EcDhSYGxXyscszYEp35KHN8vvw3svAuLKTzXwCFLtV"}
-                {cryptoDetails.network === "usdt" && "TN3W4H6rK2ce4vX9YnFQHwKENnHjoxb3m9"}
-              </code>
-              <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
-                <Copy className="w-4 h-4 text-gray-500" />
-              </button>
+              <div className="flex items-start gap-2 p-3 bg-[#e6f0ff] rounded-lg mt-6">
+                <Shield className="w-5 h-5 text-[#002d72] mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-[#002d72]">
+                  Verification typically takes 10-60 minutes after network confirmation. Please ensure your receipt clearly shows the transaction details.
+                </p>
+              </div>
             </div>
-            <div className="flex items-start gap-2 p-3 bg-yellow-50 rounded-lg mt-4">
-              <Clock className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-yellow-700">Only send {cryptoDetails.network === "usdt" ? "USDT (TRC-20)" : cryptoDetails.network.charAt(0).toUpperCase() + cryptoDetails.network.slice(1)} to this address. Sending other tokens will result in permanent loss.</p>
-            </div>
-            <div>
-              <label className="block text-sm text-gray-500 mt-4 mb-1.5">Note (optional)</label>
-              <input
-                value={cryptoDetails.walletNote}
-                onChange={(e) => setCryptoDetails({ ...cryptoDetails, walletNote: e.target.value })}
-                placeholder="Add a note for your reference"
-                className={inputClass}
-              />
-            </div>
-          </div>
-          <button
-            onClick={() => setStep("review")}
-            className="w-full py-4 bg-[#0073B9] hover:bg-[#005a94] text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2"
-          >
-            Review Deposit <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      )}
 
-      {step === "review" && (
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-            <h3 className="font-semibold text-[#003561] mb-4">Deposit Summary</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="text-gray-500">Method</span>
-                <span className="font-medium text-[#003561]">{selectedMethod?.label}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="text-gray-500">Deposit Amount</span>
-                <span className="font-mono font-medium text-[#003561]">${parseFloat(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-              </div>
-              {method === "card" && (
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-500">Processing Fee (2.5%)</span>
-                  <span className="font-mono text-gray-500">${fee.toFixed(2)}</span>
-                </div>
+            <button
+              onClick={handleSubmit}
+              disabled={!receipt || isProcessing}
+              className="w-full py-4 bg-[#002d72] hover:bg-[#001d4a] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2"
+            >
+              {isProcessing ? (
+                <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</>
+              ) : (
+                "Submit Deposit"
               )}
-              <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="text-gray-500">Estimated Arrival</span>
-                <span className="text-[#003561]">{selectedMethod?.desc}</span>
-              </div>
-              {method === "bank" && (
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-500">Bank</span>
-                  <span className="text-[#003561]">{bankDetails.bankName} ****{bankDetails.accountNumber.slice(-4)}</span>
-                </div>
-              )}
-              {method === "card" && (
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-500">Card</span>
-                  <span className="text-[#003561]">****{cardDetails.cardNumber.slice(-4)}</span>
-                </div>
-              )}
-              {method === "crypto" && (
-                <div className="flex justify-between py-2 border-b border-gray-100">
-                  <span className="text-gray-500">Network</span>
-                  <span className="text-[#003561] capitalize">{cryptoDetails.network}</span>
-                </div>
-              )}
-              <div className="flex justify-between py-3 font-bold text-lg">
-                <span className="text-[#003561]">Total</span>
-                <span className="text-[#003561] font-mono">${total.toFixed(2)}</span>
-              </div>
-            </div>
+            </button>
           </div>
-          <button
-            onClick={() => setStep("success")}
-            className="w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-lg transition-colors"
-          >
-            Confirm Deposit
-          </button>
-          <p className="text-center text-xs text-gray-400">
-            By confirming, you agree to our deposit terms and conditions.
-          </p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
