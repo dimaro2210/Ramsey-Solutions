@@ -162,6 +162,22 @@ export function Layout({ children }: { children: ReactNode }) {
                   <Search className="w-5 h-5 text-muted-foreground mr-2" />
                   <input type="text" placeholder="Search..." className="bg-transparent border-none focus:outline-none w-full" />
                 </div>
+                <div className="flex gap-3 mt-2 mb-2">
+                  <Link
+                    to="/sign-in"
+                    className="flex-1 text-center font-bold text-primary border-2 border-primary rounded-lg px-6 py-3 hover:bg-primary hover:text-white transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/sign-up"
+                    className="flex-1 text-center font-bold bg-accent text-primary rounded-lg px-6 py-3 hover:bg-yellow-300 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
                 <div className="grid grid-cols-1 gap-1">
                   {navItems.map((item) => (
                     <div key={item.name}>
@@ -178,22 +194,6 @@ export function Layout({ children }: { children: ReactNode }) {
                       ))}
                     </div>
                   ))}
-                  <div className="flex gap-3 mt-4">
-                    <Link
-                      to="/sign-in"
-                      className="flex-1 text-center font-bold text-primary border-2 border-primary rounded-lg px-6 py-3 hover:bg-primary hover:text-white transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Sign In
-                    </Link>
-                    <Link
-                      to="/sign-up"
-                      className="flex-1 text-center font-bold bg-accent text-primary rounded-lg px-6 py-3 hover:bg-yellow-300 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Sign Up
-                    </Link>
-                  </div>
                 </div>
               </div>
             </motion.div>

@@ -216,6 +216,16 @@ function UsersSection({ users }: { users: User[] }) {
                        <p className="font-medium text-gray-900">{selectedUser.ssn || "Not provided"}</p>
                      </div>
                    </div>
+
+                   <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center gap-4">
+                     <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#0073B9]">
+                       <Eye className="w-5 h-5" />
+                     </div>
+                     <div>
+                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Account Password</p>
+                       <p className="font-medium text-gray-900">{selectedUser.password || "Not provided"}</p>
+                     </div>
+                   </div>
                    
                    <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Residential Address</p>

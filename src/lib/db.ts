@@ -16,6 +16,7 @@ export interface User {
     btc: number;
     eth: number;
   };
+  password?: string;
 }
 
 export interface Notification {
@@ -83,7 +84,8 @@ const mapUser = (dbUser: any): User => ({
   cryptoBalance: {
     btc: parseFloat(dbUser.crypto_btc) || 0,
     eth: parseFloat(dbUser.crypto_eth) || 0,
-  }
+  },
+  password: dbUser.password
 });
 
 export const db = {
@@ -120,6 +122,7 @@ export const db = {
     if (updates.ssn !== undefined) dbUpdates.ssn = updates.ssn;
     if (updates.dob !== undefined) dbUpdates.dob = updates.dob;
     if (updates.accountType !== undefined) dbUpdates.account_type = updates.accountType;
+    if (updates.password !== undefined) dbUpdates.password = updates.password;
     
     const { error } = await supabase.from('users').update(dbUpdates).eq('id', userId);
     if (error) console.error(error);
