@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft, Mail, Phone } from "lucide-react";
 
 type HeroCard = { title: string; href: string; icon: string; external?: boolean };
 
@@ -298,6 +298,26 @@ export default function Home() {
 
       {/* SECTION 8 - TESTIMONIALS */}
       <TestimonialCarousel testimonials={testimonials} />
+
+      {/* SECTION 9 - STILL HAVE QUESTIONS */}
+      <section className="bg-gray-50 py-16 border-t border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-black text-[#0073B9] mb-4">Still Have Questions?</h2>
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Contact our Ramsey Customer Success team, available Monday and Wednesday from 10:00–5:00 p.m. and Tuesday, Thursday, Friday from 8:00–5:00 p.m. CST.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <a href="mailto:ramseysolutionscustomersupport@gmail.com" className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-[#FCD214] hover:bg-yellow-300 text-[#0073B9] font-bold rounded-full transition-colors shadow-sm">
+              <Mail className="w-5 h-5" />
+              Email Support
+            </a>
+            <a href="tel:+13416672214" className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-white border-2 border-[#0073B9] hover:bg-gray-50 text-[#0073B9] font-bold rounded-full transition-colors">
+              <Phone className="w-5 h-5" />
+              +1 341-667-2214
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
