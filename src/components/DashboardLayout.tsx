@@ -23,6 +23,7 @@ import {
   ChevronRight,
   ChevronLeft,
   ShieldAlert,
+  MessageCircle,
 } from "lucide-react";
 
 const sidebarLinks = [
@@ -126,6 +127,24 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
           {/* Sidebar Footer */}
           <div className={`py-6 flex flex-col w-full border-t border-white/5 ${isMobileExpanded ? "px-4 gap-2" : "items-center gap-3 lg:items-center"}`}>
+            {/* Support / Live Chat Button */}
+            <button
+              onClick={() => {
+                const api = (window as any).Tawk_API;
+                if (api && typeof api.toggle === 'function') {
+                  api.toggle();
+                }
+              }}
+              title={!isMobileExpanded ? "Live Support" : undefined}
+              className={`relative rounded-xl transition-all duration-200 group flex items-center text-white/30 hover:text-white hover:bg-white/5 ${isMobileExpanded ? "w-full p-4 gap-4" : "w-12 h-12 justify-center"}`}
+            >
+              <div className="relative flex-shrink-0">
+                <MessageCircle className="lg:w-5 lg:h-5 w-6 h-6 group-hover:scale-110 transition-transform" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-[#0073B9] animate-pulse" />
+              </div>
+              <span className={`font-bold text-sm whitespace-nowrap transition-opacity duration-300 lg:hidden ${isMobileExpanded ? "opacity-100" : "opacity-0 w-0 hidden"}`}>Live Support</span>
+            </button>
+
             <button 
               onClick={logout}
               title={!isMobileExpanded ? "Logout" : undefined}
