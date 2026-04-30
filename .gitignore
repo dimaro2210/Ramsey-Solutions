@@ -47,6 +47,11 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+.replit
+.replit-artifact/
+.replitignore
+replit.md
+requirements.yaml
 
 # Environment Variables
 .env
@@ -54,3 +59,16 @@ Thumbs.db
 .env.*.local
 *.env
 
+# Monorepo / Replit-specific directories (not needed for standalone deployment)
+artifacts/
+attached_assets/
+scripts/
+lib/
+
+# Unused root-level images (not referenced in source code)
+header.png
+sidebar.png
+notifications.png
+
+# Base tsconfig (inlined into tsconfig.json)
+tsconfig.base.json
