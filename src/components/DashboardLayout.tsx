@@ -131,8 +131,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <button
               onClick={() => {
                 const api = (window as any).Tawk_API;
-                if (api && typeof api.toggle === 'function') {
-                  api.toggle();
+                if (api) {
+                  if (typeof api.showWidget === 'function') api.showWidget();
+                  if (typeof api.maximize === 'function') api.maximize();
                 }
               }}
               title={!isMobileExpanded ? "Live Support" : undefined}
