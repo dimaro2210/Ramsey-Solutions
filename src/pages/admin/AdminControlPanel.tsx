@@ -495,20 +495,17 @@ function TradingSection({ users }: { users: User[] }) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#0073B9]">
                     <Search className="w-4 h-4" />
                   </div>
-                  <input 
-                    type="text"
-                    list="stock-tickers"
+                  <select 
                     value={newTrade.assetTicker}
-                    placeholder="e.g. AAPL"
                     onChange={(e) => setNewTrade({ ...newTrade, assetTicker: e.target.value })}
-                    className="w-full pl-16 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 font-black text-lg focus:bg-white focus:border-[#0073B9]/30 focus:ring-4 focus:ring-[#0073B9]/10 transition-all uppercase placeholder:text-gray-300"
-                  />
+                    className="w-full pl-16 pr-10 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 font-black text-lg focus:bg-white focus:border-[#0073B9]/30 focus:ring-4 focus:ring-[#0073B9]/10 transition-all uppercase"
+                  >
+                    <option value="" disabled>Select Asset</option>
+                    {TOP_STOCKS.map(stock => (
+                      <option key={stock} value={stock}>{stock}</option>
+                    ))}
+                  </select>
                 </div>
-                <datalist id="stock-tickers">
-                  {TOP_STOCKS.map(stock => (
-                    <option key={stock} value={stock} />
-                  ))}
-                </datalist>
               </div>
 
               <div>
@@ -941,11 +938,11 @@ export default function AdminControlPanel() {
                 <div className="w-8 h-8 rounded-xl bg-[#0073B9] flex items-center justify-center shadow-md">
                   <ShieldAlert className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-black text-lg text-[#0073B9]">Admin Control</span>
+                <span className="font-black text-lg text-[#0073B9]">Ramsey Admin</span>
               </div>
             )}
             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-gray-400 hover:text-[#0073B9] hover:bg-gray-50 rounded-lg transition-colors ml-auto">
-              <Menu className="w-5 h-5" />
+              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
           
