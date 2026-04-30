@@ -52,13 +52,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
+    setIsLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
+      setIsLoading(false);
       return { success: false, error: error.message };
     }
     // The onAuthStateChange listener will automatically detect the login,
     // fetch the user from db, and update the global state. 
-    // This prevents the duplicate token lock race condition.
+    // It will also set setIsLoading(false) once done.
     return { success: true };
   };
 

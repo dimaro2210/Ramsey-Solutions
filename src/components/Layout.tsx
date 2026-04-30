@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Menu, X, ChevronDown, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Search, Menu, X, ChevronDown, Facebook, Instagram, Twitter, Youtube, Mail, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
@@ -224,8 +224,18 @@ export function Layout({ children }: { children: ReactNode }) {
               <ul className="space-y-3 text-sm text-gray-300">
                 <li><a href="https://www.ramseysolutions.com/company" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Our Story</a></li>
                 <li><a href="https://www.ramseysolutions.com/careers" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Careers</a></li>
-                <li><a href="mailto:ramseysolutionscustomersupport@gmail.com" className="hover:text-accent transition-colors">ramseysolutionscustomersupport@gmail.com</a></li>
-                <li><a href="tel:+13416672214" className="hover:text-accent transition-colors">+1 341-667-2214</a></li>
+                <li>
+                  <a href="mailto:ramseysolutionscustomersupport@gmail.com" className="flex items-center gap-2 hover:text-accent transition-colors">
+                    <Mail className="w-4 h-4 flex-shrink-0" />
+                    <span className="truncate" title="ramseysolutionscustomersupport@gmail.com">ramseysolutionscustomersupport@gmail.com</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+13416672214" className="flex items-center gap-2 hover:text-accent transition-colors">
+                    <Phone className="w-4 h-4 flex-shrink-0" />
+                    <span>+1 341-667-2214</span>
+                  </a>
+                </li>
                 <li><a href="https://www.ramseysolutions.com/press" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Newsroom</a></li>
               </ul>
             </div>
