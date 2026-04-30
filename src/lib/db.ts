@@ -98,11 +98,12 @@ export const db = {
 
   async getUser(id: string): Promise<User | null> {
     if (!id) return null;
-    const { data, error } = await supabase.from('users').select('*').eq('id', id).single();
+    const { data, error } = await supabase.from('users').select('*').eq('id', id).maybeSingle();
     if (error) {
       console.error(error);
       return null;
     }
+    if (!data) return null;
     return mapUser(data);
   },
 

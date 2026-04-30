@@ -9,6 +9,8 @@ import {
 import { db, User, PendingDeposit, Trade } from "@/lib/db";
 import { useAuth } from "@/context/AuthContext";
 
+const getUserName = (u: User) => u.firstName ? `${u.firstName} ${u.lastName || ''}`.trim() : (u.email ? u.email.split('@')[0] : 'User');
+
 const TOP_STOCKS = [
   "AAPL (Apple Inc.)", "MSFT (Microsoft)", "GOOGL (Alphabet)", "AMZN (Amazon)", "NVDA (NVIDIA)", "META (Meta Platforms)", "TSLA (Tesla)", "BRK.B (Berkshire Hathaway)", "UNH (UnitedHealth)", "JNJ (Johnson & Johnson)", "JPM (JPMorgan Chase)", "V (Visa)", "PG (Procter & Gamble)", "XOM (Exxon Mobil)", "HD (Home Depot)", "MA (Mastercard)", "CVX (Chevron)", "PEP (PepsiCo)", "ABBV (AbbVie)", "MRK (Merck)", "KO (Coca-Cola)", "AVGO (Broadcom)", "PFE (Pfizer)", "TMO (Thermo Fisher Scientific)", "COST (Costco)", "CSCO (Cisco)", "MCD (McDonald's)", "ABT (Abbott Laboratories)", "CRM (Salesforce)", "DHR (Danaher)", "ACN (Accenture)", "LIN (Linde)", "NKE (Nike)", "ADBE (Adobe)", "WMT (Walmart)", "TXN (Texas Instruments)", "VZ (Verizon)", "PM (Philip Morris)", "NEE (NextEra Energy)", "RTX (Raytheon Technologies)", "HON (Honeywell)", "INTC (Intel)", "QCOM (Qualcomm)", "AMD (Advanced Micro Devices)", "INTU (Intuit)", "IBM (International Business Machines)", "UNP (Union Pacific)", "LOW (Lowe's)", "CAT (Caterpillar)", "BA (Boeing)", "GS (Goldman Sachs)", "SPGI (S&P Global)", "ELV (Elevance Health)", "CVS (CVS Health)", "PLD (Prologis)", "BLK (BlackRock)", "MDT (Medtronic)", "DE (Deere & Company)", "AXP (American Express)", "SYK (Stryker)", "AMT (American Tower)", "ISRG (Intuitive Surgical)", "LMT (Lockheed Martin)", "GE (General Electric)", "T (AT&T)", "NOW (ServiceNow)", "MDLZ (Mondelez)", "CB (Chubb)", "ZTS (Zoetis)", "BKNG (Booking Holdings)", "ADI (Analog Devices)", "C (Citigroup)", "MO (Altria)", "GILD (Gilead Sciences)", "MMC (Marsh & McLennan)", "SO (Southern Company)", "VRTX (Vertex Pharmaceuticals)", "TJX (TJX Companies)", "REGN (Regeneron Pharmaceuticals)", "BSX (Boston Scientific)", "DUK (Duke Energy)", "PGR (Progressive)", "BDX (Becton Dickinson)", "EOG (EOG Resources)", "CME (CME Group)", "WM (Waste Management)", "NOC (Northrop Grumman)", "AON (Aon)", "CSX (CSX Corporation)", "SCHW (Charles Schwab)", "SLB (Schlumberger)", "MCO (Moody's)", "SNPS (Synopsys)", "CDNS (Cadence Design Systems)", "ORLY (O'Reilly Automotive)", "KLA (KLA Corporation)", "MAR (Marriott International)", "PANW (Palo Alto Networks)",
   "ATVI (Activision Blizzard)", "CHTR (Charter Communications)", "AEP (American Electric Power)", "SBUX (Starbucks)", "FIS (Fidelity National)", "EW (Edwards Lifesciences)", "ROP (Roper Technologies)", "ICE (Intercontinental Exchange)", "ILMN (Illumina)", "DXCM (DexCom)", "KDP (Keurig Dr Pepper)", "NXPI (NXP Semiconductors)", "MRNA (Moderna)", "MNST (Monster Beverage)", "PCAR (PACCAR)", "CTAS (Cintas)", "PAYX (Paychex)", "WBA (Walgreens Boots Alliance)", "ALGN (Align Technology)", "LRCX (Lam Research)", "KMB (Kimberly-Clark)", "EXC (Exelon)", "BIIB (Biogen)", "KMI (Kinder Morgan)", "O (Realty Income)", "VRSK (Verisk Analytics)", "AZO (AutoZone)", "VLO (Valero Energy)", "DLTR (Dollar Tree)", "AFL (Aflac)", "WMB (Williams Companies)", "MCHP (Microchip Technology)", "IDXX (IDEXX Laboratories)", "TRV (Travelers Companies)", "WFC (Wells Fargo)", "MS (Morgan Stanley)", "BAC (Bank of America)", "PYPL (PayPal)", "TGT (Target)", "F (Ford)", "GM (General Motors)", "NFLX (Netflix)", "DIS (Walt Disney)", "CMCSA (Comcast)", "TFC (Truist Financial)", "PNC (PNC Financial Services)", "COF (Capital One)", "UBER (Uber Technologies)", "LYFT (Lyft)", "SNOW (Snowflake)", "CRWD (CrowdStrike)", "PLTR (Palantir Technologies)", "ROKU (Roku)", "SQ (Block)", "SHOP (Shopify)", "ZM (Zoom)", "DASH (DoorDash)", "ABNB (Airbnb)"
@@ -93,14 +95,14 @@ function UsersSection({ users }: { users: User[] }) {
                 <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0073B9] to-blue-400 p-0.5 shadow-sm">
                   <div className="w-full h-full bg-white rounded-full border-2 border-white overflow-hidden flex items-center justify-center">
                     {user.profilePicture ? (
-                      <img src={user.profilePicture} alt={user.name} className="w-full h-full object-cover" />
+                      <img src={user.profilePicture} alt={getUserName(user)} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="font-black text-[#0073B9]">{user.name.charAt(0)}</span>
+                      <span className="font-black text-[#0073B9]">{getUserName(user).charAt(0).toUpperCase()}</span>
                     )}
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900 group-hover:text-[#0073B9] transition-colors">{user.name}</h3>
+                  <h3 className="font-bold text-gray-900 group-hover:text-[#0073B9] transition-colors">{getUserName(user)}</h3>
                   <p className="text-xs text-gray-500">{user.email}</p>
                 </div>
               </div>
@@ -125,14 +127,14 @@ function UsersSection({ users }: { users: User[] }) {
                  <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#0073B9] to-blue-400 p-1 shadow-md">
                    <div className="w-full h-full bg-white rounded-full border-[3px] border-white overflow-hidden flex items-center justify-center">
                      {selectedUser.profilePicture ? (
-                       <img src={selectedUser.profilePicture} alt={selectedUser.name} className="w-full h-full object-cover" />
+                       <img src={selectedUser.profilePicture} alt={getUserName(selectedUser)} className="w-full h-full object-cover" />
                      ) : (
-                       <span className="text-2xl font-black text-[#0073B9]">{selectedUser.name.charAt(0)}</span>
+                       <span className="text-2xl font-black text-[#0073B9]">{getUserName(selectedUser).charAt(0).toUpperCase()}</span>
                      )}
                    </div>
                  </div>
                  <div>
-                   <h3 className="font-black text-xl text-gray-900">{selectedUser.name}</h3>
+                   <h3 className="font-black text-xl text-gray-900">{getUserName(selectedUser)}</h3>
                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green-50 text-green-600 text-[10px] font-bold uppercase mt-1">
                      <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div> Active
                    </span>
@@ -327,13 +329,13 @@ function TradingSection({ users }: { users: User[] }) {
               <div className="flex items-center gap-4 relative z-10">
                 <div className="w-14 h-14 rounded-full bg-[#0073B9]/10 flex items-center justify-center font-black text-[#0073B9] text-xl overflow-hidden border-2 border-white shadow-sm">
                   {u.profilePicture ? (
-                    <img src={u.profilePicture} alt={u.name} className="w-full h-full object-cover" />
+                    <img src={u.profilePicture} alt={getUserName(u)} className="w-full h-full object-cover" />
                   ) : (
-                    u.name.charAt(0)
+                    getUserName(u).charAt(0).toUpperCase()
                   )}
                 </div>
                 <div>
-                  <p className="font-black text-gray-900 text-lg group-hover:text-[#0073B9] transition-colors">{u.name}</p>
+                  <p className="font-black text-gray-900 text-lg group-hover:text-[#0073B9] transition-colors">{getUserName(u)}</p>
                   <p className="text-xs text-gray-400 font-bold mt-1 uppercase tracking-wider">User ID: {u.id.substring(0, 8)}...</p>
                 </div>
               </div>
@@ -356,7 +358,7 @@ function TradingSection({ users }: { users: User[] }) {
           </button>
           <div>
             <div className="flex flex-wrap items-center gap-2 md:gap-3">
-               <h2 className="text-xl md:text-2xl font-black text-gray-900">{selectedUser.name}</h2>
+               <h2 className="text-xl md:text-2xl font-black text-gray-900">{getUserName(selectedUser)}</h2>
                <span className="px-2 md:px-3 py-0.5 md:py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-black uppercase tracking-wider border border-green-100">Live Engine</span>
             </div>
             <p className="text-xs md:text-sm text-gray-500 font-medium mt-1">Viewing trade history and active positions</p>
@@ -464,7 +466,7 @@ function TradingSection({ users }: { users: User[] }) {
             <div className="flex justify-between items-start md:items-center mb-6 md:mb-8">
               <div>
                 <h3 className="text-xl md:text-2xl font-black text-gray-900">Execute New Trade</h3>
-                <p className="text-xs md:text-sm text-gray-400 font-medium">Configuring market position for {selectedUser.name}</p>
+                <p className="text-xs md:text-sm text-gray-400 font-medium">Configuring market position for {getUserName(selectedUser)}</p>
               </div>
               <button onClick={() => setTradeModal(false)} className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors"><X className="w-5 h-5 md:w-6 md:h-6" /></button>
             </div>
