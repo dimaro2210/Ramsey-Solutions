@@ -197,25 +197,7 @@ function UsersSection({ users }: { users: User[] }) {
                      </div>
                    </div>
                    
-                   <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center gap-4">
-                     <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#0073B9]">
-                       <Calendar className="w-5 h-5" />
-                     </div>
-                     <div>
-                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Date of Birth</p>
-                       <p className="font-medium text-gray-900">{selectedUser.dob || "Not provided"}</p>
-                     </div>
-                   </div>
 
-                   <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center gap-4">
-                     <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#0073B9]">
-                       <BadgeCheck className="w-5 h-5" />
-                     </div>
-                     <div>
-                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Social Security (SSN)</p>
-                       <p className="font-medium text-gray-900">{selectedUser.ssn || "Not provided"}</p>
-                     </div>
-                   </div>
 
                    <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center gap-4">
                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#0073B9]">
