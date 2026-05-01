@@ -3,7 +3,7 @@ import { TrendingUp, Wallet, ArrowDownToLine, ArrowUpFromLine, History, ChevronR
 import { useAuth } from "@/context/AuthContext";
 import { fetchLiveStocks, generateChartData, fetchMarketNews, type Asset, type NewsItem } from "@/data/marketData";
 import { Link } from "react-router-dom";
-import { db, Trade, PendingDeposit, Notification, User } from "@/lib/db";
+import { db, Trade, PendingDeposit, PendingWithdrawal, Notification, User } from "@/lib/db";
 
 function timeAgo(ts: number): string {
   const diff = Date.now() - ts;
@@ -23,6 +23,7 @@ export default function Overview() {
   const [stocks, setStocks] = useState<Asset[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [deposits, setDeposits] = useState<PendingDeposit[]>([]);
+  const [withdrawals, setWithdrawals] = useState<PendingWithdrawal[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,15 +32,17 @@ export default function Overview() {
 
   const loadAllData = useCallback(async () => {
     if (!authUser?.id) return;
-    const [dbUser, dbTrades, dbDeposits, dbNotifs] = await Promise.all([
+    const [dbUser, dbTrades, dbDeposits, dbWithdrawals, dbNotifs] = await Promise.all([
       db.getUser(authUser.id),
       db.getTrades(authUser.id),
       db.getPendingDeposits(authUser.id),
+      db.getPendingWithdrawals(authUser.id),
       db.getNotifications(authUser.id)
     ]);
     if (dbUser) setUser(dbUser);
     setTrades(dbTrades);
     setDeposits(dbDeposits);
+    setWithdrawals(dbWithdrawals);
     setNotifications(dbNotifs);
   }, [authUser?.id]);
 
@@ -90,7 +93,7 @@ export default function Overview() {
   const marqueeStocks = [...stocks, ...stocks];
   // Recent Activities — aggregate trades, deposits, and notifications
   const recentActivities = useMemo(() => {
-    const items: { id: string; icon: 'trade' | 'deposit' | 'notification'; color: string; title: string; description: string; timestamp: number }[] = [];
+    const items: { id: string; icon: 'trade' | 'deposit' | 'withdraw' | 'notification'; color: string; title: string; description: string; timestamp: number }[] = [];
 
     trades.slice(0, 5).forEach(t => {
       items.push({
@@ -116,6 +119,17 @@ export default function Overview() {
       });
     });
 
+    withdrawals.slice(0, 3).forEach(w => {
+      items.push({
+        id: `wth-${w.id}`,
+        icon: 'withdraw',
+        color: w.status === 'approved' ? 'bg-green-500' : w.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500',
+        title: `Withdrawal ${w.status === 'approved' ? 'Approved' : w.status === 'rejected' ? 'Rejected' : 'Pending'}`,
+        description: `$${w.amount.toLocaleString()} to ${w.network}`,
+        timestamp: w.createdAt,
+      });
+    });
+
     notifications.slice(0, 3).forEach(n => {
       items.push({
         id: `notif-${n.id}`,
@@ -128,7 +142,7 @@ export default function Overview() {
     });
 
     return items.sort((a, b) => b.timestamp - a.timestamp).slice(0, 6);
-  }, [trades, deposits, notifications]);
+  }, [trades, deposits, withdrawals, notifications]);
 
   return (
     <div className="flex flex-col gap-8 w-full pb-10">
@@ -331,6 +345,7 @@ export default function Overview() {
                       <div className={`w-11 h-11 rounded-xl ${style.bg} ${style.border} border flex-shrink-0 flex items-center justify-center`}>
                         {a.icon === 'trade' && <BarChart3 className={`w-5 h-5 ${style.color}`} />}
                         {a.icon === 'deposit' && <DollarSign className={`w-5 h-5 ${style.color}`} />}
+                        {a.icon === 'withdraw' && <ArrowUpFromLine className={`w-5 h-5 ${style.color}`} />}
                         {a.icon === 'notification' && <Bell className={`w-5 h-5 ${style.color}`} />}
                       </div>
                       <div className="flex-1 min-w-0">

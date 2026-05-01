@@ -61,17 +61,18 @@ export default function Withdraw() {
     const withdrawAmount = parseFloat(amount);
     if (withdrawAmount > totalBalance) return;
 
-    // Deduct from user balance (this logic simplifies by just deducting USD balance first, then crypto if needed, but for mock purposes we'll just deduct USD)
+    // Deduct from user balance immediately to prevent double spending
     let newBalance = user.balance;
     if (withdrawAmount <= user.balance) {
       newBalance -= withdrawAmount;
     } else {
-      // If it exceeds USD balance, we'd normally sell crypto here. For mock, just 0 out USD and leave remainder.
       newBalance = 0;
     }
     
     await db.updateUser(user.id, { balance: newBalance });
-    await db.addNotification(user.id, "Withdrawal Successful", `Your withdrawal of $${withdrawAmount} has been processed.`, "success");
+    
+    // Add pending withdrawal to database
+    await db.addPendingWithdrawal(user.id, withdrawAmount, network || "", walletAddress);
     
     setTransactionId(`WTH-${Date.now().toString(36).toUpperCase()}`);
     const updatedUser = await db.getUser(user.id);
@@ -85,16 +86,16 @@ export default function Withdraw() {
         <div className="w-20 h-20 bg-[#e6f0ff] rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle2 className="w-10 h-10 text-[#002d72]" />
         </div>
-        <h2 className="text-2xl font-bold text-[#002d72] mb-2">Withdrawal Initiated!</h2>
+        <h2 className="text-2xl font-bold text-[#002d72] mb-2">Withdrawal Pending Review</h2>
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-[#002d72] text-sm font-medium mb-6">
           <Activity className="w-4 h-4" />
-          Pending Settlement
+          Pending Approval
         </div>
         <p className="text-gray-500 mb-2">
           Your withdrawal of <span className="text-[#002d72] font-semibold">${parseFloat(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span> to{" "}
-          <span className="capitalize">{network}</span> has been processed.
+          <span className="capitalize">{network}</span> has been submitted.
         </p>
-        <p className="text-gray-400 text-sm mb-6">The assets will arrive in your wallet shortly depending on network congestion.</p>
+        <p className="text-gray-400 text-sm mb-6">The assets will be sent to your wallet once approved by an administrator.</p>
         <p className="text-xs text-gray-400 mb-8 font-mono bg-gray-50 py-2 rounded-lg">Tx ID: {transactionId}</p>
         <button
           onClick={() => { setStep("amount"); setAmount(""); setNetwork(null); setWalletAddress(""); }}

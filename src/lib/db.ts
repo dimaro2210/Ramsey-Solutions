@@ -16,7 +16,6 @@ export interface User {
     btc: number;
     eth: number;
   };
-  password?: string;
 }
 
 export interface Notification {
@@ -35,6 +34,17 @@ export interface PendingDeposit {
   amount: number;
   asset: "bitcoin" | "ethereum";
   receiptDataUrl: string; // base64
+  status: "pending" | "approved" | "rejected";
+  reject_reason?: string;
+  createdAt: number;
+}
+
+export interface PendingWithdrawal {
+  id: string;
+  userId: string;
+  amount: number;
+  network: string;
+  walletAddress: string;
   status: "pending" | "approved" | "rejected";
   reject_reason?: string;
   createdAt: number;
@@ -84,8 +94,7 @@ const mapUser = (dbUser: any): User => ({
   cryptoBalance: {
     btc: parseFloat(dbUser.crypto_btc) || 0,
     eth: parseFloat(dbUser.crypto_eth) || 0,
-  },
-  password: dbUser.password
+  }
 });
 
 export const db = {
@@ -122,7 +131,6 @@ export const db = {
     if (updates.ssn !== undefined) dbUpdates.ssn = updates.ssn;
     if (updates.dob !== undefined) dbUpdates.dob = updates.dob;
     if (updates.accountType !== undefined) dbUpdates.account_type = updates.accountType;
-    if (updates.password !== undefined) dbUpdates.password = updates.password;
     
     const { error } = await supabase.from('users').update(dbUpdates).eq('id', userId);
     if (error) console.error(error);
@@ -279,6 +287,90 @@ export const db = {
     if (error) return false;
 
     await this.addNotification(deposit.user_id, "Deposit Rejected", `Your deposit of $${deposit.amount} was rejected. Reason: ${reason}`, "warning");
+    window.dispatchEvent(new Event('db_updated'));
+    return true;
+  },
+
+  async getAllPendingWithdrawals(): Promise<PendingWithdrawal[]> {
+    const { data, error } = await supabase.from('pending_withdrawals').select('*').order('created_at', { ascending: false });
+    if (error) return [];
+    return data.map((d: any) => ({
+      id: d.id,
+      userId: d.user_id,
+      amount: parseFloat(d.amount),
+      network: d.network,
+      walletAddress: d.wallet_address,
+      status: d.status,
+      reject_reason: d.reject_reason,
+      createdAt: new Date(d.created_at).getTime()
+    }));
+  },
+
+  async getPendingWithdrawals(userId: string): Promise<PendingWithdrawal[]> {
+    const { data, error } = await supabase.from('pending_withdrawals').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+    if (error) return [];
+    return data.map((d: any) => ({
+      id: d.id,
+      userId: d.user_id,
+      amount: parseFloat(d.amount),
+      network: d.network,
+      walletAddress: d.wallet_address,
+      status: d.status,
+      reject_reason: d.reject_reason,
+      createdAt: new Date(d.created_at).getTime()
+    }));
+  },
+
+  async addPendingWithdrawal(userId: string, amount: number, network: string, walletAddress: string) {
+    const { data, error } = await supabase.from('pending_withdrawals').insert({
+      user_id: userId,
+      amount,
+      network,
+      wallet_address: walletAddress,
+      status: 'pending'
+    }).select().single();
+    if (error) console.error(error);
+    else {
+      await this.addNotification(userId, "Withdrawal Submitted", `Your withdrawal of $${amount} is pending verification.`, "info");
+      window.dispatchEvent(new Event('db_updated'));
+    }
+    return data;
+  },
+
+  async acceptPendingWithdrawal(withdrawalId: string) {
+    const { data: withdrawal, error: fetchErr } = await supabase.from('pending_withdrawals').select('*').eq('id', withdrawalId).single();
+    if (fetchErr || !withdrawal) return false;
+
+    const { error } = await supabase.from('pending_withdrawals').update({
+      status: 'approved',
+      processed_at: new Date().toISOString()
+    }).eq('id', withdrawalId);
+
+    if (error) return false;
+
+    await this.addNotification(withdrawal.user_id, "Withdrawal Approved", `Your withdrawal of $${withdrawal.amount} to ${withdrawal.network} has been processed.`, "success");
+    window.dispatchEvent(new Event('db_updated'));
+    return true;
+  },
+
+  async rejectPendingWithdrawal(withdrawalId: string, reason: string) {
+    const { data: withdrawal, error: fetchErr } = await supabase.from('pending_withdrawals').select('*').eq('id', withdrawalId).single();
+    if (fetchErr || !withdrawal) return false;
+
+    const { error } = await supabase.from('pending_withdrawals').update({
+      status: 'rejected',
+      reject_reason: reason,
+      processed_at: new Date().toISOString()
+    }).eq('id', withdrawalId);
+
+    if (error) return false;
+
+    const user = await this.getUser(withdrawal.user_id);
+    if (user) {
+      await this.updateUser(withdrawal.user_id, { balance: user.balance + parseFloat(withdrawal.amount) });
+    }
+
+    await this.addNotification(withdrawal.user_id, "Withdrawal Rejected", `Your withdrawal of $${withdrawal.amount} was rejected. Reason: ${reason}`, "warning");
     window.dispatchEvent(new Event('db_updated'));
     return true;
   },

@@ -4,9 +4,9 @@ import {
   CheckSquare, XSquare, Eye, Clock, Plus, ArrowLeft,
   ChevronRight, ShieldAlert, DollarSign, TrendingUp,
   History, Wallet, Mail, Phone, User2, Calendar,
-  BadgeCheck, Trash2, Timer, Settings
+  BadgeCheck, Trash2, Timer, Settings, ArrowUpFromLine
 } from "lucide-react";
-import { db, User, PendingDeposit, Trade } from "@/lib/db";
+import { db, User, PendingDeposit, Trade, PendingWithdrawal } from "@/lib/db";
 import { useAuth } from "@/context/AuthContext";
 
 const getUserName = (u: User) => u.firstName ? `${u.firstName} ${u.lastName || ''}`.trim() : (u.email ? u.email.split('@')[0] : 'User');
@@ -197,15 +197,23 @@ function UsersSection({ users }: { users: User[] }) {
                      </div>
                    </div>
                    
-
+                   <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center gap-4">
+                     <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#0073B9]">
+                       <Calendar className="w-5 h-5" />
+                     </div>
+                     <div>
+                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Date of Birth</p>
+                       <p className="font-medium text-gray-900">{selectedUser.dob || "Not provided"}</p>
+                     </div>
+                   </div>
 
                    <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center gap-4">
                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#0073B9]">
-                       <Eye className="w-5 h-5" />
+                       <BadgeCheck className="w-5 h-5" />
                      </div>
                      <div>
-                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Account Password</p>
-                       <p className="font-medium text-gray-900">{selectedUser.password || "Not provided"}</p>
+                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Social Security (SSN)</p>
+                       <p className="font-medium text-gray-900">{selectedUser.ssn || "Not provided"}</p>
                      </div>
                    </div>
                    
@@ -489,17 +497,20 @@ function TradingSection({ users }: { users: User[] }) {
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#0073B9]">
                     <Search className="w-4 h-4" />
                   </div>
-                  <select 
+                  <input 
+                    type="text"
+                    list="stock-tickers"
                     value={newTrade.assetTicker}
+                    placeholder="e.g. AAPL"
                     onChange={(e) => setNewTrade({ ...newTrade, assetTicker: e.target.value })}
-                    className="w-full pl-16 pr-10 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 font-black text-lg focus:bg-white focus:border-[#0073B9]/30 focus:ring-4 focus:ring-[#0073B9]/10 transition-all uppercase"
-                  >
-                    <option value="" disabled>Select Asset</option>
-                    {TOP_STOCKS.map(stock => (
-                      <option key={stock} value={stock}>{stock}</option>
-                    ))}
-                  </select>
+                    className="w-full pl-16 pr-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl text-gray-900 font-black text-lg focus:bg-white focus:border-[#0073B9]/30 focus:ring-4 focus:ring-[#0073B9]/10 transition-all uppercase placeholder:text-gray-300"
+                  />
                 </div>
+                <datalist id="stock-tickers">
+                  {TOP_STOCKS.map(stock => (
+                    <option key={stock} value={stock} />
+                  ))}
+                </datalist>
               </div>
 
               <div>
@@ -796,6 +807,110 @@ function DepositsSection() {
   );
 }
 
+// --- Withdrawals Section ---
+function WithdrawalsSection() {
+  const [withdrawals, setWithdrawals] = useState<PendingWithdrawal[]>([]);
+
+  useEffect(() => {
+    const loadWithdrawals = async () => {
+      const withs = await db.getAllPendingWithdrawals();
+      setWithdrawals(withs);
+    };
+    loadWithdrawals();
+  }, []);
+
+  const handleApprove = async (id: string) => {
+    await db.acceptPendingWithdrawal(id);
+    const withs = await db.getAllPendingWithdrawals();
+    setWithdrawals(withs);
+  };
+
+  const handleReject = async (id: string) => {
+    const reason = prompt("Enter rejection reason:");
+    if (reason !== null) {
+      await db.rejectPendingWithdrawal(id, reason);
+      const withs = await db.getAllPendingWithdrawals();
+      setWithdrawals(withs);
+    }
+  };
+
+  return (
+    <div className="font-sans text-gray-900">
+      <div className="mb-8">
+        <h2 className="text-2xl font-black text-[#0073B9]">Withdrawal Approvals</h2>
+        <p className="text-gray-500 font-medium">Manage and authorize outgoing fund transfers</p>
+      </div>
+
+      <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 overflow-hidden">
+        {withdrawals.length === 0 ? (
+          <div className="p-20 text-center">
+            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+               <ArrowUpFromLine className="w-8 h-8 text-gray-300" />
+            </div>
+            <p className="text-gray-400 font-bold text-lg">No pending withdrawals</p>
+            <p className="text-gray-300 text-sm mt-1">All requests have been processed</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-50">
+             {withdrawals.map(dep => (
+                <div key={dep.id} className="p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 hover:bg-gray-50/50 transition-colors">
+                   <div className="flex justify-between md:justify-start items-center md:w-1/3">
+                      <div>
+                        <p className="font-bold text-sm text-gray-900">{dep.id.substring(0, 12)}...</p>
+                        <p className="text-[10px] text-gray-400 font-bold uppercase mt-1">{new Date(dep.createdAt).toLocaleDateString()} - {dep.network}</p>
+                      </div>
+                      <span className={`md:hidden px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
+                        dep.status === "pending" ? "bg-yellow-50 text-yellow-600 border-yellow-100" :
+                        dep.status === "approved" ? "bg-green-50 text-green-600 border-green-100" : "bg-red-50 text-red-600 border-red-100"
+                      }`}>
+                        {dep.status}
+                      </span>
+                   </div>
+                   
+                   <div className="md:w-1/4">
+                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest md:hidden mb-1">Amount</p>
+                     <p className="font-black text-xl md:text-lg text-[#0073B9]">${dep.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                     <p className="text-xs text-gray-500 font-mono mt-1 break-all bg-gray-100 px-2 py-1 rounded">{dep.walletAddress}</p>
+                   </div>
+                   
+                   <div className="hidden md:block md:w-1/4">
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
+                        dep.status === "pending" ? "bg-yellow-50 text-yellow-600 border-yellow-100" :
+                        dep.status === "approved" ? "bg-green-50 text-green-600 border-green-100" : "bg-red-50 text-red-600 border-red-100"
+                      }`}>
+                        {dep.status}
+                      </span>
+                   </div>
+                   
+                   <div className="flex justify-start md:justify-end gap-2 md:w-auto pt-4 md:pt-0 border-t border-gray-50 md:border-0 mt-2 md:mt-0">
+                     {dep.status === "pending" && (
+                       <>
+                         <button 
+                           onClick={() => handleApprove(dep.id)}
+                           className="flex-1 md:flex-none h-10 md:w-10 rounded-xl bg-green-50 text-green-600 hover:bg-green-500 hover:text-white transition-all flex items-center justify-center shadow-sm"
+                           title="Approve"
+                         >
+                           <CheckSquare className="w-5 h-5" />
+                         </button>
+                         <button 
+                           onClick={() => handleReject(dep.id)}
+                           className="flex-1 md:flex-none h-10 md:w-10 rounded-xl bg-red-50 text-red-600 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shadow-sm"
+                           title="Reject"
+                         >
+                           <XSquare className="w-5 h-5" />
+                         </button>
+                       </>
+                     )}
+                   </div>
+                </div>
+             ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // --- Settings Section ---
 function SettingsSection() {
   const [bitcoinAddress, setBitcoinAddress] = useState("");
@@ -883,7 +998,7 @@ function SettingsSection() {
 // --- Main Layout ---
 export default function AdminControlPanel() {
   const [sidebarOpen, setSidebarOpen] = useState(typeof window !== 'undefined' ? window.innerWidth > 768 : true);
-  const [activeSection, setActiveSection] = useState<"users" | "trading" | "deposits" | "settings">("trading");
+  const [activeSection, setActiveSection] = useState<"users" | "trading" | "deposits" | "withdrawals" | "settings">("trading");
   const [users, setUsers] = useState<User[]>([]);
   const { user: authUser } = useAuth();
 
@@ -932,11 +1047,11 @@ export default function AdminControlPanel() {
                 <div className="w-8 h-8 rounded-xl bg-[#0073B9] flex items-center justify-center shadow-md">
                   <ShieldAlert className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-black text-lg text-[#0073B9]">Ramsey Admin</span>
+                <span className="font-black text-lg text-[#0073B9]">Admin Control</span>
               </div>
             )}
             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-gray-400 hover:text-[#0073B9] hover:bg-gray-50 rounded-lg transition-colors ml-auto">
-              {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <Menu className="w-5 h-5" />
             </button>
           </div>
           
@@ -945,6 +1060,7 @@ export default function AdminControlPanel() {
               { id: "trading", label: "Trade Engine", icon: LineChart },
               { id: "users", label: "User Directory", icon: Users },
               { id: "deposits", label: "Deposits", icon: ArrowDownToLine },
+              { id: "withdrawals", label: "Withdrawals", icon: ArrowUpFromLine },
               { id: "settings", label: "Platform Settings", icon: Settings },
             ].map(item => (
               <button
@@ -983,6 +1099,7 @@ export default function AdminControlPanel() {
                 {activeSection === 'trading' && 'Trade Engine'}
                 {activeSection === 'users' && 'User Directory'}
                 {activeSection === 'deposits' && 'Deposit Approvals'}
+                {activeSection === 'withdrawals' && 'Withdrawal Approvals'}
                 {activeSection === 'settings' && 'Platform Settings'}
               </h1>
             </div>
@@ -1006,6 +1123,7 @@ export default function AdminControlPanel() {
               {activeSection === "users" && <UsersSection users={users} />}
               {activeSection === "trading" && <TradingSection users={users} />}
               {activeSection === "deposits" && <DepositsSection />}
+              {activeSection === "withdrawals" && <WithdrawalsSection />}
               {activeSection === "settings" && <SettingsSection />}
             </div>
           </div>
