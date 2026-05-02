@@ -32,7 +32,7 @@ export interface PendingDeposit {
   id: string;
   userId: string;
   amount: number;
-  asset: "bitcoin" | "ethereum";
+  asset: "bitcoin" | "ethereum" | "usdt" | "solana";
   receiptDataUrl: string; // base64
   status: "pending" | "approved" | "rejected";
   reject_reason?: string;
@@ -75,6 +75,8 @@ export interface AdminSettings {
   depositAddresses: {
     bitcoin: string;
     ethereum: string;
+    usdt: string;
+    solana: string;
   };
 }
 
@@ -146,20 +148,24 @@ export const db = {
 
   async getAdminSettings(): Promise<AdminSettings> {
     const { data, error } = await supabase.from('admin_settings').select('*').eq('id', 1).single();
-    if (error || !data) return { depositAddresses: { bitcoin: '', ethereum: '' } };
+    if (error || !data) return { depositAddresses: { bitcoin: '', ethereum: '', usdt: '', solana: '' } };
     return {
       id: data.id,
       depositAddresses: {
-        bitcoin: data.bitcoin_address,
-        ethereum: data.ethereum_address
+        bitcoin: data.bitcoin_address || '',
+        ethereum: data.ethereum_address || '',
+        usdt: data.usdt_address || '',
+        solana: data.solana_address || ''
       }
     };
   },
 
   async updateAdminSettings(updates: Partial<AdminSettings>) {
     const dbUpdates: any = {};
-    if (updates.depositAddresses?.bitcoin) dbUpdates.bitcoin_address = updates.depositAddresses.bitcoin;
-    if (updates.depositAddresses?.ethereum) dbUpdates.ethereum_address = updates.depositAddresses.ethereum;
+    if (updates.depositAddresses?.bitcoin !== undefined) dbUpdates.bitcoin_address = updates.depositAddresses.bitcoin;
+    if (updates.depositAddresses?.ethereum !== undefined) dbUpdates.ethereum_address = updates.depositAddresses.ethereum;
+    if (updates.depositAddresses?.usdt !== undefined) dbUpdates.usdt_address = updates.depositAddresses.usdt;
+    if (updates.depositAddresses?.solana !== undefined) dbUpdates.solana_address = updates.depositAddresses.solana;
     const { error } = await supabase.from('admin_settings').update(dbUpdates).eq('id', 1);
     if (error) console.error(error);
     else window.dispatchEvent(new Event('db_updated'));
@@ -239,7 +245,7 @@ export const db = {
     }));
   },
 
-  async addPendingDeposit(userId: string, amount: number, asset: "bitcoin" | "ethereum", receiptDataUrl: string) {
+  async addPendingDeposit(userId: string, amount: number, asset: "bitcoin" | "ethereum" | "usdt" | "solana", receiptDataUrl: string) {
     const { data, error } = await supabase.from('pending_deposits').insert({
       user_id: userId,
       amount,

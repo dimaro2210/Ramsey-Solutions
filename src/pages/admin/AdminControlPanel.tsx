@@ -915,6 +915,8 @@ function WithdrawalsSection() {
 function SettingsSection() {
   const [bitcoinAddress, setBitcoinAddress] = useState("");
   const [ethereumAddress, setEthereumAddress] = useState("");
+  const [usdtAddress, setUsdtAddress] = useState("");
+  const [solanaAddress, setSolanaAddress] = useState("");
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -922,6 +924,8 @@ function SettingsSection() {
       const settings = await db.getAdminSettings();
       setBitcoinAddress(settings.depositAddresses.bitcoin);
       setEthereumAddress(settings.depositAddresses.ethereum);
+      setUsdtAddress(settings.depositAddresses.usdt);
+      setSolanaAddress(settings.depositAddresses.solana);
     };
     loadSettings();
   }, []);
@@ -931,7 +935,9 @@ function SettingsSection() {
     await db.updateAdminSettings({
       depositAddresses: {
         bitcoin: bitcoinAddress,
-        ethereum: ethereumAddress
+        ethereum: ethereumAddress,
+        usdt: usdtAddress,
+        solana: solanaAddress
       }
     });
     setSaved(true);
@@ -976,6 +982,36 @@ function SettingsSection() {
                   onChange={(e) => setEthereumAddress(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 text-gray-800 font-mono text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0073B9] transition-all"
                   placeholder="e.g. 0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-2">Tether (USDT) TRC-20 Address</label>
+              <div className="relative">
+                <Wallet className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#26A17B]" />
+                <input 
+                  type="text" 
+                  value={usdtAddress}
+                  onChange={(e) => setUsdtAddress(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 text-gray-800 font-mono text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0073B9] transition-all"
+                  placeholder="e.g. TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-2">Solana (SOL) Network Address</label>
+              <div className="relative">
+                <Wallet className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#14F195]" />
+                <input 
+                  type="text" 
+                  value={solanaAddress}
+                  onChange={(e) => setSolanaAddress(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 text-gray-800 font-mono text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0073B9] transition-all"
+                  placeholder="e.g. HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH"
                   required
                 />
               </div>

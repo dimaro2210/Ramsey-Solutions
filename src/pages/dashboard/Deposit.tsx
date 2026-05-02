@@ -22,11 +22,11 @@ export default function Deposit() {
   const { user } = useAuth();
   const [step, setStep] = useState<Step>("amount");
   const [amount, setAmount] = useState("");
-  const [asset, setAsset] = useState<"bitcoin" | "ethereum" | null>(null);
+  const [asset, setAsset] = useState<"bitcoin" | "ethereum" | "usdt" | "solana" | null>(null);
   const [receipt, setReceipt] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [referenceId, setReferenceId] = useState("");
-  const [adminSettings, setAdminSettings] = useState({ depositAddresses: { bitcoin: '', ethereum: '' } });
+  const [adminSettings, setAdminSettings] = useState({ depositAddresses: { bitcoin: '', ethereum: '', usdt: '', solana: '' } });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -58,9 +58,11 @@ export default function Deposit() {
   };
 
   const generateAddress = () => {
-    return asset === "bitcoin" 
-      ? adminSettings.depositAddresses.bitcoin
-      : adminSettings.depositAddresses.ethereum;
+    if (asset === "bitcoin") return adminSettings.depositAddresses.bitcoin;
+    if (asset === "ethereum") return adminSettings.depositAddresses.ethereum;
+    if (asset === "usdt") return adminSettings.depositAddresses.usdt;
+    if (asset === "solana") return adminSettings.depositAddresses.solana;
+    return "";
   };
 
   const handleSubmit = async () => {
@@ -176,7 +178,9 @@ export default function Deposit() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   { id: "bitcoin", label: "Bitcoin (BTC)", icon: "₿" },
-                  { id: "ethereum", label: "Ethereum (ETH)", icon: "Ξ" }
+                  { id: "ethereum", label: "Ethereum (ETH)", icon: "Ξ" },
+                  { id: "usdt", label: "Tether (USDT)", icon: "₮" },
+                  { id: "solana", label: "Solana (SOL)", icon: "◎" }
                 ].map((n) => (
                   <button
                     key={n.id}
@@ -213,7 +217,7 @@ export default function Deposit() {
           <div className="space-y-6">
             <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
               <div className="text-center mb-6">
-                <h3 className="font-semibold text-[#002d72] text-lg">Send {asset === "bitcoin" ? "BTC" : "ETH"}</h3>
+                <h3 className="font-semibold text-[#002d72] text-lg">Send {asset === "bitcoin" ? "BTC" : asset === "ethereum" ? "ETH" : asset === "usdt" ? "USDT" : "SOL"}</h3>
                 <p className="text-gray-500 text-sm">Transfer exactly <span className="font-semibold">${amount}</span> worth to the address below.</p>
               </div>
 
