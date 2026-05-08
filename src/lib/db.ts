@@ -139,6 +139,22 @@ export const db = {
     else window.dispatchEvent(new Event('db_updated'));
   },
 
+  async deleteUser(userId: string): Promise<boolean> {
+    // Delete all related records first to avoid FK constraint issues
+    await supabase.from('trades').delete().eq('user_id', userId);
+    await supabase.from('pending_deposits').delete().eq('user_id', userId);
+    await supabase.from('pending_withdrawals').delete().eq('user_id', userId);
+    await supabase.from('notifications').delete().eq('user_id', userId);
+    // Delete the user row itself
+    const { error } = await supabase.from('users').delete().eq('id', userId);
+    if (error) {
+      console.error(error);
+      return false;
+    }
+    window.dispatchEvent(new Event('db_updated'));
+    return true;
+  },
+
   async updateCryptoBalance(userId: string, asset: "btc" | "eth", amount: number) {
     const user = await this.getUser(userId);
     if (!user) return;
@@ -169,6 +185,21 @@ export const db = {
     const { error } = await supabase.from('admin_settings').update(dbUpdates).eq('id', 1);
     if (error) console.error(error);
     else window.dispatchEvent(new Event('db_updated'));
+  },
+
+  async getAdminPassword(): Promise<string> {
+    const { data, error } = await supabase.from('admin_settings').select('admin_password').eq('id', 1).single();
+    if (error || !data) return 'Ramsey@2026'; // fallback default
+    return data.admin_password || 'Ramsey@2026';
+  },
+
+  async updateAdminPassword(newPassword: string): Promise<boolean> {
+    const { error } = await supabase.from('admin_settings').update({ admin_password: newPassword }).eq('id', 1);
+    if (error) {
+      console.error(error);
+      return false;
+    }
+    return true;
   },
 
   async getNotifications(userId: string): Promise<Notification[]> {

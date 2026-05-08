@@ -4,7 +4,7 @@ import {
   CheckSquare, XSquare, Eye, Clock, Plus, ArrowLeft,
   ChevronRight, ShieldAlert, DollarSign, TrendingUp,
   History, Wallet, Mail, Phone, User2, Calendar,
-  BadgeCheck, Trash2, Timer, Settings, ArrowUpFromLine
+  BadgeCheck, Trash2, Timer, Settings, ArrowUpFromLine, Lock
 } from "lucide-react";
 import { db, User, PendingDeposit, Trade, PendingWithdrawal } from "@/lib/db";
 import { useAuth } from "@/context/AuthContext";
@@ -21,15 +21,24 @@ function AdminGate({ children }: { children: React.ReactNode }) {
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "Ramsey@2026") {
-      setIsAuthenticated(true);
-    } else {
+    setLoading(true);
+    try {
+      const adminPassword = await db.getAdminPassword();
+      if (password === adminPassword) {
+        setIsAuthenticated(true);
+      } else {
+        setError(true);
+        setPassword("");
+      }
+    } catch {
       setError(true);
       setPassword("");
     }
+    setLoading(false);
   };
 
   if (isAuthenticated) return <>{children}</>;
@@ -37,9 +46,7 @@ function AdminGate({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 font-sans text-gray-900">
       <div className="w-full max-w-md bg-white rounded-[24px] p-8 shadow-2xl border border-gray-100 relative overflow-hidden">
-        {/* Decorative background element */}
         <div className="absolute top-0 right-0 w-32 h-32 rounded-bl-full bg-[#0073B9]/5 -z-0"></div>
-
         <div className="flex flex-col items-center mb-8 relative z-10">
           <div className="w-16 h-16 bg-white border border-gray-100 rounded-2xl flex items-center justify-center mb-4 shadow-sm">
             <img src="https://www.google.com/s2/favicons?domain=ramseysolutions.com&sz=128" alt="Ramsey" className="w-10 h-10 object-contain" />
@@ -47,7 +54,6 @@ function AdminGate({ children }: { children: React.ReactNode }) {
           <h1 className="text-2xl font-black text-[#0073B9]">Admin Portal</h1>
           <p className="text-sm text-gray-500 font-medium mt-2">Restricted Access Area</p>
         </div>
-        
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Admin Passcode</label>
@@ -61,8 +67,8 @@ function AdminGate({ children }: { children: React.ReactNode }) {
             />
             {error && <p className="text-red-500 text-xs font-bold mt-2">Invalid credentials. Access denied.</p>}
           </div>
-          <button type="submit" className="w-full py-4 bg-[#0073B9] hover:bg-blue-700 text-white rounded-xl transition-all font-black shadow-lg shadow-[#0073B9]/20 hover:-translate-y-1">
-            Authenticate
+          <button type="submit" disabled={loading} className="w-full py-4 bg-[#0073B9] hover:bg-blue-700 text-white rounded-xl transition-all font-black shadow-lg shadow-[#0073B9]/20 hover:-translate-y-1 disabled:opacity-50">
+            {loading ? 'Verifying...' : 'Authenticate'}
           </button>
         </form>
       </div>
@@ -71,8 +77,22 @@ function AdminGate({ children }: { children: React.ReactNode }) {
 }
 
 // --- Users Section ---
-function UsersSection({ users }: { users: User[] }) {
+function UsersSection({ users, onUserDeleted }: { users: User[]; onUserDeleted: () => void }) {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<User | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteUser = async () => {
+    if (!deleteConfirm) return;
+    setDeleting(true);
+    const success = await db.deleteUser(deleteConfirm.id);
+    setDeleting(false);
+    if (success) {
+      setDeleteConfirm(null);
+      setSelectedUser(null);
+      onUserDeleted();
+    }
+  };
 
   return (
     <div className="font-sans text-gray-900">
@@ -225,7 +245,54 @@ function UsersSection({ users }: { users: User[] }) {
                </div>
 
              </div>
+
+             {/* Drawer Footer — Delete Button */}
+             <div className="p-4 md:p-6 border-t border-gray-100 bg-gray-50/50">
+               <button
+                 onClick={() => setDeleteConfirm(selectedUser)}
+                 className="w-full py-3 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-100 hover:border-red-500 rounded-2xl font-black text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-2 group"
+               >
+                 <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                 Delete Account
+               </button>
+             </div>
            </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4 font-sans">
+          <div className="bg-white rounded-[32px] p-8 md:p-10 w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-red-100">
+              <Trash2 className="w-9 h-9 text-red-500" />
+            </div>
+            <h3 className="text-2xl font-black text-center text-gray-900 mb-2">Delete Account?</h3>
+            <p className="text-gray-500 text-center font-medium mb-2 leading-relaxed">
+              You are about to permanently delete the account for
+            </p>
+            <p className="text-center font-black text-gray-900 mb-1">{getUserName(deleteConfirm)}</p>
+            <p className="text-center text-sm text-gray-400 mb-6">{deleteConfirm.email}</p>
+            <div className="bg-red-50 border border-red-100 rounded-2xl p-4 mb-8 text-center">
+              <p className="text-red-600 text-xs font-black uppercase tracking-wider">⚠ This will permanently erase all their trades, deposits, withdrawals and notifications. This cannot be undone.</p>
+            </div>
+            <div className="flex gap-4">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                disabled={deleting}
+                className="flex-1 py-4 bg-gray-100 text-gray-500 rounded-2xl font-black transition-colors uppercase tracking-widest hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteUser}
+                disabled={deleting}
+                className="flex-1 py-4 bg-red-500 hover:bg-red-600 text-white rounded-2xl font-black transition-all shadow-lg shadow-red-500/20 uppercase tracking-widest disabled:opacity-50"
+              >
+                {deleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -919,6 +986,13 @@ function SettingsSection() {
   const [solanaAddress, setSolanaAddress] = useState("");
   const [saved, setSaved] = useState(false);
 
+  // Password change state
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwSaving, setPwSaving] = useState(false);
+  const [pwMsg, setPwMsg] = useState<{ text: string; type: "success" | "error" } | null>(null);
+
   useEffect(() => {
     const loadSettings = async () => {
       const settings = await db.getAdminSettings();
@@ -944,8 +1018,46 @@ function SettingsSection() {
     setTimeout(() => setSaved(false), 3000);
   };
 
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwMsg(null);
+
+    if (newPassword.length < 6) {
+      setPwMsg({ text: "New password must be at least 6 characters.", type: "error" });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPwMsg({ text: "New passwords do not match.", type: "error" });
+      return;
+    }
+
+    setPwSaving(true);
+    try {
+      const storedPassword = await db.getAdminPassword();
+      if (currentPassword !== storedPassword) {
+        setPwMsg({ text: "Current password is incorrect.", type: "error" });
+        setPwSaving(false);
+        return;
+      }
+      const success = await db.updateAdminPassword(newPassword);
+      if (success) {
+        setPwMsg({ text: "Admin password updated successfully!", type: "success" });
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        setPwMsg({ text: "Failed to update password. Please try again.", type: "error" });
+      }
+    } catch {
+      setPwMsg({ text: "An error occurred. Please try again.", type: "error" });
+    }
+    setPwSaving(false);
+    setTimeout(() => setPwMsg(null), 4000);
+  };
+
   return (
-    <div className="font-sans text-gray-900 max-w-3xl mx-auto">
+    <div className="font-sans text-gray-900 max-w-3xl mx-auto space-y-8">
+      {/* Crypto Deposit Addresses Card */}
       <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
            <h2 className="text-lg font-black text-[#0073B9] flex items-center gap-2">
@@ -1023,6 +1135,75 @@ function SettingsSection() {
               Save Configuration
             </button>
             {saved && <span className="text-green-600 font-bold text-sm animate-pulse">Changes saved and broadcasted to users!</span>}
+          </div>
+        </form>
+      </div>
+
+      {/* Change Admin Password Card */}
+      <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 overflow-hidden">
+        <div className="p-6 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+          <h2 className="text-lg font-black text-[#0073B9] flex items-center gap-2">
+            <Lock className="w-5 h-5" /> Change Admin Password
+          </h2>
+        </div>
+        <form onSubmit={handlePasswordChange} className="p-6 md:p-8 space-y-5">
+          <p className="text-sm text-gray-500">Update the passcode used to access this Admin Control Panel. You must verify your current password first.</p>
+
+          <div>
+            <label className="block text-xs font-bold text-gray-500 mb-2">Current Password</label>
+            <div className="relative">
+              <Lock className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 text-gray-800 font-bold text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0073B9] transition-all"
+                placeholder="Enter current password"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-gray-500 mb-2">New Password</label>
+            <div className="relative">
+              <Lock className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#0073B9]" />
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 text-gray-800 font-bold text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0073B9] transition-all"
+                placeholder="Enter new password (min 6 characters)"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-gray-500 mb-2">Confirm New Password</label>
+            <div className="relative">
+              <Lock className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#0073B9]" />
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 text-gray-800 font-bold text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0073B9] transition-all"
+                placeholder="Confirm new password"
+                required
+              />
+            </div>
+          </div>
+
+          {pwMsg && (
+            <div className={`p-4 rounded-xl text-sm font-bold ${pwMsg.type === "success" ? "bg-green-50 text-green-600 border border-green-100" : "bg-red-50 text-red-600 border border-red-100"}`}>
+              {pwMsg.text}
+            </div>
+          )}
+
+          <div className="pt-2">
+            <button type="submit" disabled={pwSaving} className="px-8 py-3 bg-[#0073B9] hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md disabled:opacity-50">
+              {pwSaving ? "Updating..." : "Update Password"}
+            </button>
           </div>
         </form>
       </div>
@@ -1156,7 +1337,7 @@ export default function AdminControlPanel() {
 
           <div className="flex-1 p-8">
             <div className="max-w-7xl mx-auto">
-              {activeSection === "users" && <UsersSection users={users} />}
+              {activeSection === "users" && <UsersSection users={users} onUserDeleted={loadData} />}
               {activeSection === "trading" && <TradingSection users={users} />}
               {activeSection === "deposits" && <DepositsSection />}
               {activeSection === "withdrawals" && <WithdrawalsSection />}
