@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -71,18 +71,21 @@ export default function SignUp() {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-border p-10 text-center">
-          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Mail className="w-10 h-10 text-[#0073B9]" />
+          <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
-          <h2 className="text-3xl font-black text-[#0073B9] mb-4">Check Your Email</h2>
-          <p className="text-gray-500 mb-8 leading-relaxed">
-            We've sent a verification link to your Gmail. Please check your inbox (and spam folder) and click the link to activate your trading account.
+          <h2 className="text-3xl font-black text-[#0073B9] mb-4">Account Created Successfully!</h2>
+          <p className="text-gray-500 mb-3 leading-relaxed">
+            Your trading account has been set up and is ready to go. You can now sign in and start exploring the platform.
+          </p>
+          <p className="text-gray-400 text-sm mb-8">
+            Use the email and password you just created to log in.
           </p>
           <button
             onClick={() => navigate("/sign-in")}
             className="w-full bg-[#0073B9] text-white font-bold text-lg py-4 rounded-xl hover:bg-blue-700 transition-colors shadow-md"
           >
-            Go Back to Login
+            Back to Login
           </button>
         </div>
       </div>

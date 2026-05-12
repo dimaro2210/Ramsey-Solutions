@@ -13,7 +13,7 @@ export default function Home() {
     { title: "Buy/Sell Real Estate", href: "/real-estate/residential-real-estate", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-real-estate-2x.png" },
     { title: "Create a Budget", href: "/money/everydollar", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-create-budget-2x.png" },
     { title: "File Your Taxes", href: "/taxes", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-taxes-2x.png" },
-    { title: "Start Investing", href: "/retirement/smartvestor", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-investing-2x.png" },
+    { title: "Start Investing", href: "/investing", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-investing-2x.png" },
     { title: "Plan for Retirement", href: "/retirement/smartvestor", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-retirement-2x.png" },
     { title: "Find Your Insurance", href: "/insurance", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-insurance-2x.png" },
     { title: "Shop the Store", href: "https://store.ramseysolutions.com", icon: "https://cdn.ramseysolutions.net/media/homepage/2025/02-testing/digmktg-35509/icon-store-2x.png", external: true }

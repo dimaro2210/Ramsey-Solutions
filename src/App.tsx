@@ -21,6 +21,7 @@ import TheRamseyShow from "@/pages/TheRamseyShow";
 import SevenBabySteps from "@/pages/SevenBabySteps";
 import Trusted from "@/pages/Trusted";
 import AskRamsey from "@/pages/AskRamsey";
+import Investing from "@/pages/Investing";
 
 import DashboardLayout from "@/components/DashboardLayout";
 import Overview from "./pages/dashboard/Overview";
@@ -80,6 +81,7 @@ function AppRoutes() {
       <Route path="/shows/the-ramsey-show" element={<Layout><TheRamseyShow /></Layout>} />
       <Route path="/dave-ramsey-7-baby-steps" element={<Layout><SevenBabySteps /></Layout>} />
       <Route path="/trusted" element={<Layout><Trusted /></Layout>} />
+      <Route path="/investing" element={<Layout><Investing /></Layout>} />
       <Route path="*" element={<Layout><NotFound /></Layout>} />
     </Routes>
   );
