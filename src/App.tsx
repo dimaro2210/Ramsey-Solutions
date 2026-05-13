@@ -32,6 +32,7 @@ import TradingHistory from "@/pages/dashboard/TradingHistory";
 import Profile from "@/pages/dashboard/Profile";
 
 import Notifications from "@/pages/dashboard/Notifications";
+import InvestmentGuide from "@/pages/dashboard/InvestmentGuide";
 import AdminControlPanel from "@/pages/admin/AdminControlPanel";
 import { ReactNode } from "react";
 
@@ -66,6 +67,7 @@ function AppRoutes() {
       <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardLayout><Profile /></DashboardLayout></ProtectedRoute>} />
       <Route path="/dashboard/settings" element={<Navigate to="/dashboard/profile" replace />} />
       <Route path="/dashboard/notifications" element={<ProtectedRoute><DashboardLayout><Notifications /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/dashboard/guide" element={<ProtectedRoute><DashboardLayout><InvestmentGuide /></DashboardLayout></ProtectedRoute>} />
 
       <Route path="/" element={<Layout><Home /></Layout>} />
       <Route path="/sign-in" element={<Layout><SignIn /></Layout>} />

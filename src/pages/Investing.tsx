@@ -47,7 +47,7 @@ const assetClasses = [
 ];
 
 const faqs = [
-  { q: "What is the minimum investment amount?", a: "You can start investing with as little as $100. There's no maximum limit, and you can add funds to your account at any time." },
+  { q: "What is the minimum investment amount?", a: "You can start investing with as little as $1000. There's no maximum limit, and you can add funds to your account at any time." },
   { q: "How are my investments protected?", a: "All funds are held in segregated accounts with FDIC-insured banking partners. Digital assets are stored in institutional-grade cold storage with multi-signature security." },
   { q: "What fees do you charge?", a: "We offer competitive, transparent pricing with no hidden fees. Stock trades have zero commission, and crypto trades carry a small 0.5% spread. No account maintenance fees." },
   { q: "Can I withdraw my funds at any time?", a: "Yes, you have full control over your funds. Withdrawals are processed within 1-3 business days depending on your preferred method." },

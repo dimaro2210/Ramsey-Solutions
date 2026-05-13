@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { TrendingUp, Wallet, ArrowDownToLine, ArrowUpFromLine, History, ChevronRight, ArrowUpRight, Play, Clock, ArrowDown, ArrowUp, Activity, DollarSign, Bell, BarChart3, Newspaper } from "lucide-react";
+import { TrendingUp, Wallet, ArrowDownToLine, ArrowUpFromLine, History, ChevronRight, ArrowUpRight, Play, Clock, ArrowDown, ArrowUp, Activity, DollarSign, Bell, BarChart3, Newspaper, HelpCircle, X, Zap, Target, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { fetchLiveStocks, generateChartData, fetchMarketNews, type Asset, type NewsItem } from "@/data/marketData";
 import { Link } from "react-router-dom";
@@ -281,7 +281,7 @@ export default function Overview() {
       </div>
 
       {/* Row 3: Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { title: "Account Funding", color: "text-green-600 bg-green-50", to: "/dashboard/deposit", icon: <ArrowDownToLine className="w-5 h-5"/> },
           { title: "Withdraw Funds", color: "text-[#0073B9] bg-[#0073B9]/10", to: "/dashboard/withdraw", icon: <ArrowUpFromLine className="w-5 h-5"/> },
@@ -296,6 +296,17 @@ export default function Overview() {
             </div>
           </Link>
         ))}
+        <Link 
+          to="/dashboard/guide"
+          className="flex items-center gap-4 p-4 bg-white rounded-[20px] border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all group text-left"
+        >
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-amber-600 bg-amber-50 group-hover:scale-105 transition-transform">
+            <HelpCircle className="w-5 h-5"/>
+          </div>
+          <div>
+            <h4 className="font-bold text-[#0073B9] text-sm group-hover:text-blue-600 transition-colors">Investment Guide</h4>
+          </div>
+        </Link>
       </div>
 
       {/* Row 4: Recent Activities + Recent Trades side by side */}
