@@ -1006,7 +1006,7 @@ function SettingsSection() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    await db.updateAdminSettings({
+    const success = await db.updateAdminSettings({
       depositAddresses: {
         bitcoin: bitcoinAddress,
         ethereum: ethereumAddress,
@@ -1014,8 +1014,12 @@ function SettingsSection() {
         solana: solanaAddress
       }
     });
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    if (success) {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } else {
+      alert("Failed to save wallet addresses. Please check Supabase RLS policies for admin_settings table — UPDATE and INSERT must be allowed.");
+    }
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {

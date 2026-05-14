@@ -176,16 +176,44 @@ export const db = {
     };
   },
 
-  async updateAdminSettings(updates: Partial<AdminSettings>) {
-    const dbUpdates: any = {};
+  async updateAdminSettings(updates: Partial<AdminSettings>): Promise<boolean> {
+    const dbUpdates: any = { id: 1 };
     if (updates.depositAddresses?.bitcoin !== undefined) dbUpdates.bitcoin_address = updates.depositAddresses.bitcoin;
     if (updates.depositAddresses?.ethereum !== undefined) dbUpdates.ethereum_address = updates.depositAddresses.ethereum;
     if (updates.depositAddresses?.usdt !== undefined) dbUpdates.usdt_address = updates.depositAddresses.usdt;
     if (updates.depositAddresses?.solana !== undefined) dbUpdates.solana_address = updates.depositAddresses.solana;
-    
-    const { error } = await supabase.from('admin_settings').update(dbUpdates).eq('id', 1);
-    if (error) console.error(error);
-    else window.dispatchEvent(new Event('db_updated'));
+
+    // Try update first
+    const { data: updateData, error: updateError } = await supabase
+      .from('admin_settings')
+      .update(dbUpdates)
+      .eq('id', 1)
+      .select();
+
+    if (updateError) {
+      console.error('[Admin Settings] Update failed:', updateError);
+      // Fallback: try upsert in case the row doesn't exist or RLS blocks update
+      const { error: upsertError } = await supabase
+        .from('admin_settings')
+        .upsert(dbUpdates, { onConflict: 'id' });
+      if (upsertError) {
+        console.error('[Admin Settings] Upsert also failed:', upsertError);
+        return false;
+      }
+    } else if (!updateData || updateData.length === 0) {
+      // Update matched 0 rows — row might not exist, try upsert
+      console.warn('[Admin Settings] Update matched 0 rows, trying upsert...');
+      const { error: upsertError } = await supabase
+        .from('admin_settings')
+        .upsert(dbUpdates, { onConflict: 'id' });
+      if (upsertError) {
+        console.error('[Admin Settings] Upsert also failed:', upsertError);
+        return false;
+      }
+    }
+
+    window.dispatchEvent(new Event('db_updated'));
+    return true;
   },
 
   async getAdminPassword(): Promise<string> {
