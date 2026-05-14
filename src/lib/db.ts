@@ -177,13 +177,13 @@ export const db = {
   },
 
   async updateAdminSettings(updates: Partial<AdminSettings>) {
-    const dbUpdates: any = { id: 1 };
+    const dbUpdates: any = {};
     if (updates.depositAddresses?.bitcoin !== undefined) dbUpdates.bitcoin_address = updates.depositAddresses.bitcoin;
     if (updates.depositAddresses?.ethereum !== undefined) dbUpdates.ethereum_address = updates.depositAddresses.ethereum;
     if (updates.depositAddresses?.usdt !== undefined) dbUpdates.usdt_address = updates.depositAddresses.usdt;
     if (updates.depositAddresses?.solana !== undefined) dbUpdates.solana_address = updates.depositAddresses.solana;
     
-    const { error } = await supabase.from('admin_settings').upsert(dbUpdates);
+    const { error } = await supabase.from('admin_settings').update(dbUpdates).eq('id', 1);
     if (error) console.error(error);
     else window.dispatchEvent(new Event('db_updated'));
   },
@@ -195,7 +195,7 @@ export const db = {
   },
 
   async updateAdminPassword(newPassword: string): Promise<boolean> {
-    const { error } = await supabase.from('admin_settings').upsert({ id: 1, admin_password: newPassword });
+    const { error } = await supabase.from('admin_settings').update({ admin_password: newPassword }).eq('id', 1);
     if (error) {
       console.error(error);
       return false;
